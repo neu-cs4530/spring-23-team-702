@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+	  "types": ["jest"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "rootDirs": ["./src/", "./generated/"],
+    "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
+  },
+  "include": [
+    "src",
+    "generated"
+  ],
+  "references": [{"path": "../shared/"}]
+}

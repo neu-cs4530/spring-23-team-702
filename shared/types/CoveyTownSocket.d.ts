@@ -33,6 +33,8 @@ export interface Player {
 
 export type XY = { x: number, y: number };
 
+export type Video = { title: string, url: string, durationSec: number, userID: string, pause: boolean, speed: number, elapsedTimeSec: number };
+
 export interface PlayerLocation {
   /* The CENTER x coordinate of this player's location */
   x: number;
@@ -75,6 +77,14 @@ export interface PosterSessionArea {
   stars: number;
   imageContents?: string;
   title?: string;
+}
+
+export interface WatchTogetherArea {
+  id: string;
+  hostID: string;
+  viewerByID: string[];
+  video?: Video;
+  playList: Video[];
 }
 
 export interface ServerToClientEvents {

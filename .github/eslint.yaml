@@ -35,5 +35,5 @@ jobs:
         continue-on-error: false
 
       - name: townService eslint check
-		run: cd ../townService && npm install && npm run lint
-		continue-on-error: false
+	run: cd ../townService && npm install && npm run lint
+	continue-on-error: false

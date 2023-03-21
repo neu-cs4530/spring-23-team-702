@@ -22,6 +22,7 @@ jobs:
   eslint:
     name: Run eslint scanning
     runs-on: ubuntu-latest
+    continue-on-error: false
     permissions:
       contents: read
       security-events: write
@@ -32,8 +33,6 @@ jobs:
 
       - name: frontend eslint check
         run: cd frontend && npm install && npm run lint
-        continue-on-error: false
 
       - name: townService eslint check
-	run: cd ../townService && npm install && npm run lint
-	continue-on-error: false
+	      run: cd ../townService && npm install && npm run lint

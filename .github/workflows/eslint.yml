@@ -15,14 +15,17 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
-  schedule:
-    - cron: '31 23 * * 5'
+#  schedule:
+#    - cron: '31 23 * * 5'
 
 jobs:
   eslint:
     name: Run eslint scanning
     runs-on: ubuntu-latest
-    continue-on-error: false
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [16.19.0]
     permissions:
       contents: read
       security-events: write
@@ -30,9 +33,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: frontend eslint check
-        run: cd frontend && npm install && npm run lint
-
+        working-directory: frontend
+        run: npm install && npm run lint
+        continue-on-error: false
       - name: townService eslint check
-	      run: cd ../townService && npm install && npm run lint
+        working-directory: townService
+        run: npm install && npm run lint
+        continue-on-error: false

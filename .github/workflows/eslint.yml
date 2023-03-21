@@ -22,6 +22,10 @@ jobs:
   eslint:
     name: Run eslint scanning
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [16.19.0]
     permissions:
       contents: read
       security-events: write
@@ -29,6 +33,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: frontend eslint check
         working-directory: frontend
         run: npm install -g npm@v8.19.3 && npm run lint

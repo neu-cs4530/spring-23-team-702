@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  ModalBodyProps,
   Image,
   useToast,
   List,

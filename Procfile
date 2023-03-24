@@ -1,1 +1,1 @@
-web: cd townService && npm run build:live
+web: node services/townService/build/server.js

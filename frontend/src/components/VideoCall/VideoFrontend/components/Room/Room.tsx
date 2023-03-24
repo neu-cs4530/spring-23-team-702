@@ -9,9 +9,9 @@ import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
-    theme.sidebarMobilePadding * 2 +
-    theme.participantBorderWidth}px`;
+  const totalMobileSidebarHeight = `${
+    theme.sidebarMobileHeight + theme.sidebarMobilePadding * 2 + theme.participantBorderWidth
+  }px`;
   // return {
   //   container: {
   //     position: 'relative',
@@ -26,20 +26,24 @@ const useStyles = makeStyles((theme: Theme) => {
   //   },
   //   rightDrawerOpen: { gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px` },
   // };
-    return {container: (props) => ({
-      
-    position: 'relative',
-    height: '100%',
-    display: 'grid',
-    gridTemplateColumns: `1fr ${theme.sidebarWidth}px`,
-    gridTemplateRows: '100%',
-    [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '100%',
-      // gridTemplateRows: `1fr ${theme.sidebarMobileHeight + 26}px`,
-      gridTemplateRows: `calc(100% - ${totalMobileSidebarHeight}) ${totalMobileSidebarHeight}`,
-      overflow: 'auto',
+  return {
+    container: props => ({
+      position: 'relative',
+      height: '100%',
+      display: 'grid',
+      gridTemplateColumns: `1fr ${theme.sidebarWidth}px`,
+      gridTemplateRows: '100%',
+      [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '100%',
+        // gridTemplateRows: `1fr ${theme.sidebarMobileHeight + 26}px`,
+        gridTemplateRows: `calc(100% - ${totalMobileSidebarHeight}) ${totalMobileSidebarHeight}`,
+        overflow: 'auto',
+      },
+    }),
+    rightDrawerOpen: {
+      gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px`,
     },
-  }), rightDrawerOpen: { gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px` },}
+  };
 });
 
 export default function Room() {
@@ -50,8 +54,7 @@ export default function Room() {
     <div
       className={clsx(classes.container, {
         [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
-      })}
-    >
+      })}>
       {/* <MainParticipant /> */}
       <ParticipantList />
       <ChatWindow />

@@ -1,5 +1,10 @@
 import {
+  Avatar,
+  Badge,
+  Box,
   Button,
+  Flex,
+  Text,
   FormControl,
   FormLabel,
   Input,
@@ -10,12 +15,31 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Image,
+  SimpleGrid,
+  Square,
+  Tag,
+  TagLabel,
   useToast,
+  List,
+  ListIcon,
+  ListItem,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  useDisclosure,
+  Center,
 } from '@chakra-ui/react';
 import React, { useCallback, useEffect, useState } from 'react';
+import ReactPlayer from 'react-player';
 import { useViewingAreaController } from '../../../classes/TownController';
 import useTownController from '../../../hooks/useTownController';
 import { ViewingArea as ViewingAreaModel } from '../../../types/CoveyTownSocket';
+import VideoOverlay from '../../VideoCall/VideoOverlay/VideoOverlay';
 import ViewingArea from './ViewingArea';
 
 export default function SelectVideoModal({
@@ -29,7 +53,7 @@ export default function SelectVideoModal({
 }): JSX.Element {
   const coveyTownController = useTownController();
   const viewingAreaController = useViewingAreaController(viewingArea?.name);
-
+  const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
   const [video, setVideo] = useState<string>(viewingArea?.defaultVideoURL || '');
 
   useEffect(() => {
@@ -83,37 +107,122 @@ export default function SelectVideoModal({
   return (
     <Modal
       isOpen={isOpen}
+      size={'full'}
+      motionPreset='slideInBottom'
       onClose={() => {
         closeModal();
         coveyTownController.unPause();
       }}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Pick a video to watch in {viewingAreaController?.id} </ModalHeader>
+        <ModalHeader>
+          <Center>Basement TV playing</Center>
+        </ModalHeader>
         <ModalCloseButton />
-        <form
-          onSubmit={ev => {
-            ev.preventDefault();
-            createViewingArea();
-          }}>
-          <ModalBody pb={6}>
-            <FormControl>
-              <FormLabel htmlFor='video'>Video URL</FormLabel>
-              <Input
-                id='video'
-                name='video'
-                value={video}
-                onChange={e => setVideo(e.target.value)}
+        <ModalBody>
+          <Flex color='white'>
+            <Box
+              h='calc(90vh)'
+              flex='1'
+              bg='white'
+              overflowY='auto'
+              paddingRight={'6'}
+              paddingLeft={'1'}
+              paddingBottom={'1'}
+              paddingTop={'1'}>
+              <Button
+                colorScheme='teal'
+                onClick={() => {
+                  setDrawerIsOpen(true);
+                }}
+                inlineSize={'full'}>
+                Open Playlist
+              </Button>
+              <Drawer
+                isOpen={drawerIsOpen}
+                placement='right'
+                onClose={() => {
+                  setDrawerIsOpen(false);
+                }}>
+                <DrawerOverlay />
+                <DrawerContent>
+                  <DrawerCloseButton />
+                  <DrawerHeader>Here is the playlist</DrawerHeader>
+
+                  <DrawerBody>
+                    <List spacing={3}>
+                      <ListItem p='4'>
+                        <Image
+                          sizes='full'
+                          objectFit='contain'
+                          src='https://i.ytimg.com/vi/3r-gOSlYf00/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAxqTDBHAgKRDt-Pr8oqR-H0rxL_g'
+                          alt='Dan Abramov'
+                        />
+                        Over 100 Things You Can Do With The Create Mod - Minecraft 1.18.2
+                      </ListItem>
+                      <ListItem p='4'>
+                        <Image
+                          sizes='full'
+                          objectFit='contain'
+                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
+                          alt='Dan Abramov'
+                        />
+                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
+                      </ListItem>
+                      <ListItem p='4'>
+                        <Image
+                          sizes='full'
+                          objectFit='contain'
+                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
+                          alt='Dan Abramov'
+                        />
+                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
+                      </ListItem>
+                      <ListItem p='4'>
+                        <Image
+                          sizes='full'
+                          objectFit='contain'
+                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
+                          alt='Dan Abramov'
+                        />
+                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
+                      </ListItem>
+                      <ListItem p='4'>
+                        <Image
+                          sizes='full'
+                          objectFit='contain'
+                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
+                          alt='Dan Abramov'
+                        />
+                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
+                      </ListItem>
+                    </List>
+                  </DrawerBody>
+                </DrawerContent>
+              </Drawer>
+            </Box>
+            {/*video play box */}
+            <Box flex='4' bg='white'>
+              <ReactPlayer
+                config={{
+                  youtube: {
+                    playerVars: {
+                      // disable skipping time via keyboard to avoid weirdness with chat, etc
+                      disablekb: 1,
+                      autoplay: 1,
+                      // modestbranding: 1,
+                    },
+                  },
+                }}
+                p='4'
+                width='100%'
+                height='100%'
+                controls={true}
+                url='https://www.youtube.com/watch?v=u1JB_opf2u8'
               />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={createViewingArea}>
-              Set video
-            </Button>
-            <Button onClick={closeModal}>Cancel</Button>
-          </ModalFooter>
-        </form>
+            </Box>
+          </Flex>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

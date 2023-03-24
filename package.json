@@ -4,7 +4,7 @@
     "description": "Development setup",
     "main": "index.js",
     "scripts": {
-        "install": "cd townService && rm package-lock.json && npm install && npm install openapi && npm run prestart && cd ../frontend && npm install && npm run prestart && cd ../shared && npm install",
+        "install": "cd townService && npm install && npm run prestart && cd ../frontend && npm install && npm run prestart && cd ../shared && npm install",
         "heroku-postbuild": "cd townService && npm install && npm run build",
         "run-townservice": "heroku local -p 3001 web",
         "lint": "cd townService && npm run-script lint && cd ../frontend && npm run-script lint && cd ../shared && npm run-script lint",

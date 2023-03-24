@@ -67,7 +67,7 @@
     "eject": "react-scripts eject",
     "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx ",
-    "client": "ls node_modules/.bin/ && openapi --input ../shared/generated/swagger.json --output ./src/generated/client --client axios --name TownsServiceClient",
+    "client": "openapi --input ../shared/generated/swagger.json --output ./src/generated/client --client axios --name TownsServiceClient",
     "stryker-prepare": "replace-in-file '/../../..//g' '../../../../../' src/types/CoveyTownSocket.d.ts --isRegex",
     "stryker": "stryker run"
   },

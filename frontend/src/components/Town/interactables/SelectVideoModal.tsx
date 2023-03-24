@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Button,
@@ -9,7 +10,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Image,
-  useToast,
   List,
   ListItem,
   Drawer,
@@ -24,8 +24,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useViewingAreaController } from '../../../classes/TownController';
 import useTownController from '../../../hooks/useTownController';
-import { ViewingArea as ViewingAreaModel } from '../../../types/CoveyTownSocket';
-import VideoOverlay from '../../VideoCall/VideoOverlay/VideoOverlay';
 import ViewingArea from './ViewingArea';
 
 export default function SelectVideoModal({
@@ -38,9 +36,7 @@ export default function SelectVideoModal({
   viewingArea: ViewingArea;
 }): JSX.Element {
   const coveyTownController = useTownController();
-  const viewingAreaController = useViewingAreaController(viewingArea?.name);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
-  const [video, setVideo] = useState<string>(viewingArea?.defaultVideoURL || '');
 
   useEffect(() => {
     if (isOpen) {
@@ -54,41 +50,6 @@ export default function SelectVideoModal({
     coveyTownController.unPause();
     close();
   }, [coveyTownController, close]);
-
-  const toast = useToast();
-
-  const createViewingArea = useCallback(async () => {
-    if (video && viewingAreaController) {
-      const request: ViewingAreaModel = {
-        id: viewingAreaController.id,
-        video,
-        isPlaying: true,
-        elapsedTimeSec: 0,
-      };
-      try {
-        await coveyTownController.createViewingArea(request);
-        toast({
-          title: 'Video set!',
-          status: 'success',
-        });
-        coveyTownController.unPause();
-      } catch (err) {
-        if (err instanceof Error) {
-          toast({
-            title: 'Unable to set video URL',
-            description: err.toString(),
-            status: 'error',
-          });
-        } else {
-          console.trace(err);
-          toast({
-            title: 'Unexpected Error',
-            status: 'error',
-          });
-        }
-      }
-    }
-  }, [video, coveyTownController, viewingAreaController, toast]);
 
   return (
     <Modal

@@ -41,7 +41,7 @@ function App() {
   } else {
     page = <PreJoinScreens />;
   }
-  const url = 'web-production-361f.up.railway.app';
+  const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
   const townsService = new TownsServiceClient({ BASE: url }).towns;
   return (

@@ -1,1 +1,1 @@
-web: node services/townService/build/server.js
+web: node townService/build/server.js

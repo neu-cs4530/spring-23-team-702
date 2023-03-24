@@ -33,7 +33,7 @@ jobs:
   #       run: cd frontend; npm install && npm run prestart && npm run lint && npm test
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: build-and-test
+    # needs: build-and-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

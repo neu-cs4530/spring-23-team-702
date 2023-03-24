@@ -63,7 +63,7 @@ export default class WatchTogetherArea extends InteractableArea {
       this._hostID = undefined;
       this._playList = [];
     } else if (this.hostID !== undefined && player.id === this.hostID) {
-      const occupantsByID = this.occupantsByID();
+      const { occupantsByID } = this;
       this._hostID = occupantsByID[Math.floor(Math.random() * occupantsByID.length)];
     }
 

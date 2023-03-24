@@ -213,7 +213,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
         */
     this.setMaxListeners(30);
 
-    const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
+    const url = 'web-production-361f.up.railway.app';
     assert(url);
     this._socket = io(url, { auth: { userName, townID } });
     this._townsService = new TownsServiceClient({ BASE: url }).towns;

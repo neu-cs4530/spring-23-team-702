@@ -102,42 +102,6 @@ export default function WatchTogetherModal({
                         />
                         Over 100 Things You Can Do With The Create Mod - Minecraft 1.18.2
                       </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
                     </List>
                   </DrawerBody>
                 </DrawerContent>

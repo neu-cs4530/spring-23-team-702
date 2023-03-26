@@ -22,9 +22,18 @@ import {
 } from '@chakra-ui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
+import ViewingAreaController from '../../../classes/ViewingAreaController';
 import useTownController from '../../../hooks/useTownController';
 
-export default function WatchTogetherModal(): JSX.Element {
+export default function WatchTogetherModal({
+  viewingAreaController,
+  reactPlayerRef,
+  isPlaying,
+}: {
+  viewingAreaController: ViewingAreaController;
+  reactPlayerRef: React.RefObject<ReactPlayer>;
+  isPlaying: boolean;
+}): JSX.Element {
   const coveyTownController = useTownController();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
@@ -39,7 +48,7 @@ export default function WatchTogetherModal(): JSX.Element {
 
   return (
     <Modal
-      isOpen={modalIsOpen}
+      isOpen={true}
       size={'full'}
       motionPreset='slideInBottom'
       onClose={() => {
@@ -137,6 +146,7 @@ export default function WatchTogetherModal(): JSX.Element {
             {/*video play box */}
             <Box flex='4' bg='white'>
               <ReactPlayer
+                ref={reactPlayerRef}
                 config={{
                   youtube: {
                     playerVars: {
@@ -152,6 +162,34 @@ export default function WatchTogetherModal(): JSX.Element {
                 height='100%'
                 controls={true}
                 url='https://www.youtube.com/watch?v=u1JB_opf2u8'
+                playing={isPlaying}
+                onProgress={state => {
+                  if (
+                    state.playedSeconds != 0 &&
+                    state.playedSeconds != viewingAreaController.elapsedTimeSec
+                  ) {
+                    viewingAreaController.elapsedTimeSec = state.playedSeconds;
+                    coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+                  }
+                }}
+                onPlay={() => {
+                  if (!viewingAreaController.isPlaying) {
+                    viewingAreaController.isPlaying = true;
+                    coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+                  }
+                }}
+                onPause={() => {
+                  if (viewingAreaController.isPlaying) {
+                    viewingAreaController.isPlaying = false;
+                    coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+                  }
+                }}
+                onEnded={() => {
+                  if (viewingAreaController.isPlaying) {
+                    viewingAreaController.isPlaying = false;
+                    coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+                  }
+                }}
               />
             </Box>
           </Flex>

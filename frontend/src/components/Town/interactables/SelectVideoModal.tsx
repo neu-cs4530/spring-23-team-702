@@ -1,29 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Box,
   Button,
-  Flex,
+  FormControl,
+  FormLabel,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Image,
-  List,
-  ListItem,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  Center,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useCallback, useEffect, useState } from 'react';
-import ReactPlayer from 'react-player';
 import { useViewingAreaController } from '../../../classes/TownController';
 import useTownController from '../../../hooks/useTownController';
+import { ViewingArea as ViewingAreaModel } from '../../../types/CoveyTownSocket';
 import ViewingArea from './ViewingArea';
 
 export default function SelectVideoModal({
@@ -36,7 +28,9 @@ export default function SelectVideoModal({
   viewingArea: ViewingArea;
 }): JSX.Element {
   const coveyTownController = useTownController();
-  const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
+  const viewingAreaController = useViewingAreaController(viewingArea?.name);
+
+  const [video, setVideo] = useState<string>(viewingArea?.defaultVideoURL || '');
 
   useEffect(() => {
     if (isOpen) {
@@ -51,125 +45,75 @@ export default function SelectVideoModal({
     close();
   }, [coveyTownController, close]);
 
+  const toast = useToast();
+
+  const createViewingArea = useCallback(async () => {
+    if (video && viewingAreaController) {
+      const request: ViewingAreaModel = {
+        id: viewingAreaController.id,
+        video,
+        isPlaying: true,
+        elapsedTimeSec: 0,
+      };
+      try {
+        await coveyTownController.createViewingArea(request);
+        toast({
+          title: 'Video set!',
+          status: 'success',
+        });
+        coveyTownController.unPause();
+      } catch (err) {
+        if (err instanceof Error) {
+          toast({
+            title: 'Unable to set video URL',
+            description: err.toString(),
+            status: 'error',
+          });
+        } else {
+          console.trace(err);
+          toast({
+            title: 'Unexpected Error',
+            status: 'error',
+          });
+        }
+      }
+    }
+  }, [video, coveyTownController, viewingAreaController, toast]);
+
   return (
     <Modal
       isOpen={isOpen}
-      size={'full'}
-      motionPreset='slideInBottom'
       onClose={() => {
         closeModal();
         coveyTownController.unPause();
       }}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
-          <Center>Basement TV playing</Center>
-        </ModalHeader>
+        <ModalHeader>Pick a video to watch in {viewingAreaController?.id} </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <Flex color='white'>
-            <Box
-              h='calc(90vh)'
-              flex='1'
-              bg='white'
-              overflowY='auto'
-              paddingRight={'6'}
-              paddingLeft={'1'}
-              paddingBottom={'1'}
-              paddingTop={'1'}>
-              <Button
-                colorScheme='teal'
-                onClick={() => {
-                  setDrawerIsOpen(true);
-                }}
-                inlineSize={'full'}>
-                Open Playlist
-              </Button>
-              <Drawer
-                isOpen={drawerIsOpen}
-                placement='right'
-                onClose={() => {
-                  setDrawerIsOpen(false);
-                }}>
-                <DrawerOverlay />
-                <DrawerContent>
-                  <DrawerCloseButton />
-                  <DrawerHeader>Here is the playlist</DrawerHeader>
-
-                  <DrawerBody>
-                    <List spacing={3}>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi/3r-gOSlYf00/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAxqTDBHAgKRDt-Pr8oqR-H0rxL_g'
-                          alt='Dan Abramov'
-                        />
-                        Over 100 Things You Can Do With The Create Mod - Minecraft 1.18.2
-                      </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
-                      <ListItem p='4'>
-                        <Image
-                          sizes='full'
-                          objectFit='contain'
-                          src='https://i.ytimg.com/vi_webp/W8_LEnpT5_I/maxresdefault.webp'
-                          alt='Dan Abramov'
-                        />
-                        我的拜师日记：拜陈老为师学习鲁菜正宗，没想到被批基本功太懒散【醋溜海参片·糖醋瓦块鱼】
-                      </ListItem>
-                    </List>
-                  </DrawerBody>
-                </DrawerContent>
-              </Drawer>
-            </Box>
-            {/*video play box */}
-            <Box flex='4' bg='white'>
-              <ReactPlayer
-                config={{
-                  youtube: {
-                    playerVars: {
-                      // disable skipping time via keyboard to avoid weirdness with chat, etc
-                      disablekb: 1,
-                      autoplay: 1,
-                      // modestbranding: 1,
-                    },
-                  },
-                }}
-                p='4'
-                width='100%'
-                height='100%'
-                controls={true}
-                url='https://www.youtube.com/watch?v=u1JB_opf2u8'
+        <form
+          onSubmit={ev => {
+            ev.preventDefault();
+            createViewingArea();
+          }}>
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel htmlFor='video'>Video URL</FormLabel>
+              <Input
+                id='video'
+                name='video'
+                value={video}
+                onChange={e => setVideo(e.target.value)}
               />
-            </Box>
-          </Flex>
-        </ModalBody>
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={createViewingArea}>
+              Set video
+            </Button>
+            <Button onClick={closeModal}>Cancel</Button>
+          </ModalFooter>
+        </form>
       </ModalContent>
     </Modal>
   );

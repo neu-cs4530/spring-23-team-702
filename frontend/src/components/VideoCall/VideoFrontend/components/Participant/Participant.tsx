@@ -31,7 +31,7 @@ export default function Participant({
   insideGrid,
 }: ParticipantProps) {
   return (
-    <div className="participant-wrapper">
+    <div className='participant-wrapper'>
       <ParticipantInfo
         participant={participant}
         profile={profile}

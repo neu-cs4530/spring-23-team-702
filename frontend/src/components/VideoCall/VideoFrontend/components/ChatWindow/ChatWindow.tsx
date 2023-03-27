@@ -9,12 +9,12 @@ import useChatContext from '../../hooks/useChatContext/useChatContext';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     chatWindowContainer: {
-      pointerEvents: 'auto',
-      background: '#FFFFFF',
-      zIndex: 1000,
-      display: 'flex',
-      flexDirection: 'column',
-      borderLeft: '1px solid #E4E7E9',
+      'pointerEvents': 'auto',
+      'background': '#FFFFFF',
+      'zIndex': 1000,
+      'display': 'flex',
+      'flexDirection': 'column',
+      'borderLeft': '1px solid #E4E7E9',
       [theme.breakpoints.down('sm')]: {
         position: 'fixed',
         top: 0,
@@ -23,16 +23,16 @@ const useStyles = makeStyles((theme: Theme) =>
         right: 0,
         zIndex: 100,
       },
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      top: 0,
-      'max-width': '250px'
+      'position': 'fixed',
+      'bottom': 0,
+      'left': 0,
+      'top': 0,
+      'max-width': '250px',
     },
     hide: {
       display: 'none',
     },
-  })
+  }),
 );
 
 // In this component, we are toggling the visibility of the ChatWindow with CSS instead of

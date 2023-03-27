@@ -24,6 +24,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import ViewingAreaController from '../../../classes/ViewingAreaController';
 import useTownController from '../../../hooks/useTownController';
+import ChatWindow from '../../VideoCall/VideoFrontend/components/ChatWindow/ChatWindow';
+import Room from '../../VideoCall/VideoFrontend/components/Room/Room';
+import ParticipantList from '../../VideoCall/VideoFrontend/components/ParticipantList/ParticipantList';
 
 export default function WatchTogetherModal({
   viewingAreaController,
@@ -80,6 +83,9 @@ export default function WatchTogetherModal({
                 inlineSize={'full'}>
                 Open Playlist
               </Button>
+              <Box paddingTop={'6'}>
+                <ParticipantList />
+              </Box>
               <Drawer
                 isOpen={drawerIsOpen}
                 placement='right'

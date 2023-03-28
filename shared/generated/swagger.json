@@ -7,7 +7,7 @@
 		"responses": {},
 		"schemas": {
 			"Town": {
-				"description": "The public-facing model that represents a town. More information about the town\nis available for users who join it.",
+				"description": "The public-facing model that represents a town. More information about the town\r\nis available for users who join it.",
 				"properties": {
 					"friendlyName": {
 						"type": "string",
@@ -65,11 +65,11 @@
 					},
 					"isPubliclyListed": {
 						"type": "boolean",
-						"description": "Players will identify towns by either knowing the (randomly generated) town ID, or the town ID will be publicly\nlisted along wiht the friendly name of the town. This behavior can be controlled when creating the town by changing\nthis flag."
+						"description": "Players will identify towns by either knowing the (randomly generated) town ID, or the town ID will be publicly\r\nlisted along wiht the friendly name of the town. This behavior can be controlled when creating the town by changing\r\nthis flag."
 					},
 					"mapFile": {
 						"type": "string",
-						"description": "Reserved for future use, currently only used for testing: this parameter can be\nspecified to control which Tiled map file is used for initializing the set of interactable areas\n\nNot currently used on frontend"
+						"description": "Reserved for future use, currently only used for testing: this parameter can be\r\nspecified to control which Tiled map file is used for initializing the set of interactable areas\r\n\r\nNot currently used on frontend"
 					}
 				},
 				"required": [
@@ -450,7 +450,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -507,7 +507,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -580,7 +580,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -617,7 +617,7 @@
 						}
 					}
 				},
-				"description": "Increment the stars of a given poster session area in a given town, as long as there is\na poster image. Returns the new number of stars.",
+				"description": "Increment the stars of a given poster session area in a given town, as long as there is\r\na poster image. Returns the new number of stars.",
 				"tags": [
 					"towns"
 				],
@@ -642,7 +642,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,

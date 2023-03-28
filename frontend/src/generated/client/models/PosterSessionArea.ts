@@ -8,4 +8,3 @@ export type PosterSessionArea = {
     imageContents?: string;
     title?: string;
 };
-

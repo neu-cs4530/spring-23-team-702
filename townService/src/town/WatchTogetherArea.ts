@@ -1,7 +1,6 @@
 import { ITiledMapObject } from '@jonbell/tiled-map-type-guard';
 import Player from '../lib/Player';
 import {
-  Interactable,
   BoundingBox,
   TownEmitter,
   Video,
@@ -12,18 +11,12 @@ import InteractableArea from './InteractableArea';
 export default class WatchTogetherArea extends InteractableArea {
   private _hostID?: string;
 
-  private _viewerByID: string[];
-
   private _video?: Video;
 
   private _playList: Video[];
 
   public get hostID() {
     return this._hostID;
-  }
-
-  public get viewerByID() {
-    return this._viewerByID;
   }
 
   public get video() {
@@ -38,13 +31,12 @@ export default class WatchTogetherArea extends InteractableArea {
    *
    */
   public constructor(
-    { id, hostID, viewerByID, video, playList }: WatchTogetherAreaModel,
+    { id, hostID, video, playList }: WatchTogetherAreaModel,
     coordinates: BoundingBox,
     townEmitter: TownEmitter,
   ) {
     super(id, coordinates, townEmitter);
     this._hostID = hostID;
-    this._viewerByID = viewerByID;
     this._video = video;
     this._playList = playList;
   }
@@ -71,15 +63,14 @@ export default class WatchTogetherArea extends InteractableArea {
   }
 
   /**
-   * Updates the state of this WatchTogetherArea, setting the  hostID, viewerByID, video, playList  properties
+   * Updates the state of this WatchTogetherArea, setting the hostID, viewerByID, video, playList properties
    *
    * @param WatchTogetherAreaModel updated model
    */
-  public updateModel({ id, hostID, viewerByID, video, playList }: WatchTogetherAreaModel) {
-    this._hostID = hostID;
-    this._viewerByID = viewerByID;
-    this._video = video;
-    this._playList = playList;
+  public updateModel(updatedModel: WatchTogetherAreaModel): void {
+    this._hostID = updatedModel.hostID;
+    this._video = updatedModel.video;
+    this._playList = updatedModel.playList;
   }
 
   /**
@@ -89,7 +80,6 @@ export default class WatchTogetherArea extends InteractableArea {
     return {
       id: this.id,
       hostID: this._hostID,
-      viewerByID: this._viewerByID,
       video: this.video,
       playList: this._playList,
     };
@@ -114,7 +104,6 @@ export default class WatchTogetherArea extends InteractableArea {
       {
         id: name,
         hostID: undefined,
-        viewerByID: [],
         video: undefined,
         playList: [],
       },

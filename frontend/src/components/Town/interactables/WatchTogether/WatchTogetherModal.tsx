@@ -30,6 +30,7 @@ export default function WatchTogetherModal({
   const coveyTownController = useTownController();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [videoPlaying, setVideoPlaying] = useState<string>();
   const [playList, setPlaylist] = useState<Array<string>>([]);
 

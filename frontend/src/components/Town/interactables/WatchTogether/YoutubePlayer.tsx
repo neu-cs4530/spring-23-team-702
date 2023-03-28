@@ -9,7 +9,6 @@ export default function WatchTogetherModal({
   reactPlayerRef,
   isPlaying,
   coveyTownController,
-  videoPlayingURL,
   videoPlaylist,
 }: {
   viewingAreaController: ViewingAreaController;

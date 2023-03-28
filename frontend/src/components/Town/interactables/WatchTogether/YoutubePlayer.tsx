@@ -1,5 +1,5 @@
-import { Box, Button } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { Box } from '@chakra-ui/react';
+import React from 'react';
 import ReactPlayer from 'react-player';
 import ViewingAreaController from '../../../../classes/ViewingAreaController';
 import TownController from '../../../../classes/TownController';
@@ -10,14 +10,12 @@ export default function WatchTogetherModal({
   isPlaying,
   coveyTownController,
   videoPlaylist,
-  setVideoPlaylist,
 }: {
   viewingAreaController: ViewingAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
   isPlaying: boolean;
   coveyTownController: TownController;
   videoPlaylist: Array<string>;
-  setVideoPlaylist: React.Dispatch<React.SetStateAction<string[]>>;
 }): JSX.Element {
   return (
     <Box flex='4' bg='white'>
@@ -68,18 +66,6 @@ export default function WatchTogetherModal({
           }
         }}
       />
-
-      <Button
-        colorScheme='teal'
-        onClick={() => {
-          const newPlaylist = [...videoPlaylist];
-          newPlaylist.shift();
-          setVideoPlaylist(newPlaylist);
-          console.log(newPlaylist);
-        }}
-        inlineSize={'full'}>
-        Next video
-      </Button>
     </Box>
   );
 }

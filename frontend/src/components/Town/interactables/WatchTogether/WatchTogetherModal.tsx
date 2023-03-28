@@ -10,7 +10,7 @@ import {
   ModalOverlay,
   Center,
 } from '@chakra-ui/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import ViewingAreaController from '../../../../classes/ViewingAreaController';
 import useTownController from '../../../../hooks/useTownController';
@@ -102,7 +102,6 @@ export default function WatchTogetherModal({
               isPlaying={isPlaying}
               coveyTownController={coveyTownController}
               videoPlaylist={playList}
-              setVideoPlaylist={setPlaylist}
             />
           </Flex>
         </ModalBody>

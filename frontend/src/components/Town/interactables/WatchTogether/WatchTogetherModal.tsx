@@ -30,6 +30,8 @@ export default function WatchTogetherModal({
   const coveyTownController = useTownController();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
+  const [videoPlaying, setVideoPlaying] = useState<string>();
+  const [playList, setPlaylist] = useState<Array<string>>([]);
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -86,6 +88,8 @@ export default function WatchTogetherModal({
                 close={function (): void {
                   setDrawerIsOpen(false);
                 }}
+                playList={playList}
+                setPlaylist={setPlaylist}
               />
             </Box>
             {/*Video play box */}
@@ -94,6 +98,8 @@ export default function WatchTogetherModal({
               reactPlayerRef={reactPlayerRef}
               isPlaying={isPlaying}
               coveyTownController={coveyTownController}
+              videoPlayingURL={videoPlaying}
+              videoPlaylist={playList}
             />
           </Flex>
         </ModalBody>

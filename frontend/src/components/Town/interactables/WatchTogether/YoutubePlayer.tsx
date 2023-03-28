@@ -9,11 +9,15 @@ export default function WatchTogetherModal({
   reactPlayerRef,
   isPlaying,
   coveyTownController,
+  videoPlayingURL,
+  videoPlaylist,
 }: {
   viewingAreaController: ViewingAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
   isPlaying: boolean;
   coveyTownController: TownController;
+  videoPlayingURL: string | undefined;
+  videoPlaylist: Array<string>;
 }): JSX.Element {
   return (
     <Box flex='4' bg='white'>
@@ -33,7 +37,7 @@ export default function WatchTogetherModal({
         width='100%'
         height='100%'
         controls={true}
-        url='https://www.youtube.com/watch?v=u1JB_opf2u8'
+        url={videoPlaylist[0]}
         playing={isPlaying}
         onProgress={state => {
           if (

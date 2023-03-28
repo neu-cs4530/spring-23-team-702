@@ -8,16 +8,29 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Button,
+  InputRightElement,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function WatchTogetherModal({
+export default function PlaylistDrawer({
   drawerIsOpen,
   close,
+  playList,
+  setPlaylist,
 }: {
   drawerIsOpen: boolean;
   close: () => void;
+  playList: Array<string>;
+  setPlaylist: React.Dispatch<React.SetStateAction<string[]>>;
 }): JSX.Element {
+  const [inputVideoURL, setInputVideoURL] = useState<string>('');
+
   return (
     <Drawer
       isOpen={drawerIsOpen}
@@ -32,6 +45,31 @@ export default function WatchTogetherModal({
 
         <DrawerBody>
           <List spacing={3}>
+            <FormControl>
+              <FormLabel htmlFor='video'>Video URL</FormLabel>
+              <InputGroup>
+                <InputRightElement>
+                  <Button
+                    colorScheme='teal'
+                    onClick={() => {
+                      playList.push(inputVideoURL);
+                      setPlaylist(playList);
+                      setInputVideoURL('');
+                    }}
+                    inlineSize={'full'}>
+                    +
+                  </Button>
+                </InputRightElement>
+                <Input
+                  id='video'
+                  name='video'
+                  value={inputVideoURL}
+                  onChange={e => {
+                    setInputVideoURL(e.target.value);
+                  }}
+                />
+              </InputGroup>
+            </FormControl>
             <ListItem p='4'>
               <Image
                 sizes='full'

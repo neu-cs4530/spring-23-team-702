@@ -131,7 +131,7 @@ export default class TownGameScene extends Phaser.Scene {
   }
 
   updatePlayers(players: PlayerController[]) {
-    //Make sure that each player has sprites
+    // Make sure that each player has sprites
     players.map(eachPlayer => this.createPlayerSprites(eachPlayer));
 
     // Remove disconnected players from board

@@ -10,7 +10,7 @@ import {
   ModalOverlay,
   Center,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import ViewingAreaController from '../../../../classes/ViewingAreaController';
 import useTownController from '../../../../hooks/useTownController';
@@ -30,9 +30,11 @@ export default function WatchTogetherModal({
   const coveyTownController = useTownController();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [videoPlaying, setVideoPlaying] = useState<string>();
   const [playList, setPlaylist] = useState<Array<string>>([]);
+
+  const handlePlaylistUpdate = (newVideoPlaylist: Array<string>) => {
+    setPlaylist(newVideoPlaylist);
+  };
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -90,7 +92,7 @@ export default function WatchTogetherModal({
                   setDrawerIsOpen(false);
                 }}
                 playList={playList}
-                setPlaylist={setPlaylist}
+                handlePlaylistUpdate={handlePlaylistUpdate}
               />
             </Box>
             {/*Video play box */}
@@ -99,8 +101,8 @@ export default function WatchTogetherModal({
               reactPlayerRef={reactPlayerRef}
               isPlaying={isPlaying}
               coveyTownController={coveyTownController}
-              videoPlayingURL={videoPlaying}
               videoPlaylist={playList}
+              setVideoPlaylist={setPlaylist}
             />
           </Flex>
         </ModalBody>

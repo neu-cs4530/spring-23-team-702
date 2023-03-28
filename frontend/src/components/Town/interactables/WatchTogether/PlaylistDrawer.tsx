@@ -21,12 +21,12 @@ export default function PlaylistDrawer({
   drawerIsOpen,
   close,
   playList,
-  setPlaylist,
+  handlePlaylistUpdate,
 }: {
   drawerIsOpen: boolean;
   close: () => void;
   playList: Array<string>;
-  setPlaylist: React.Dispatch<React.SetStateAction<string[]>>;
+  handlePlaylistUpdate: (newVideoPlaylist: Array<string>) => void;
 }): JSX.Element {
   const [inputVideoURL, setInputVideoURL] = useState<string>('');
 
@@ -40,10 +40,11 @@ export default function PlaylistDrawer({
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Here is the playlist</DrawerHeader>
+        <DrawerHeader>Video playlist</DrawerHeader>
 
         <DrawerBody>
           <List spacing={3}>
+            {/* Video URL input box */}
             <FormControl>
               <FormLabel htmlFor='video'>Video URL</FormLabel>
               <InputGroup>
@@ -51,9 +52,10 @@ export default function PlaylistDrawer({
                   <Button
                     colorScheme='teal'
                     onClick={() => {
-                      playList.push(inputVideoURL);
-                      setPlaylist(playList);
-                      setInputVideoURL('');
+                      const newPlaylist = [...playList];
+                      newPlaylist.push(inputVideoURL);
+                      handlePlaylistUpdate(newPlaylist);
+                      console.log(playList);
                     }}
                     inlineSize={'full'}>
                     +
@@ -69,6 +71,21 @@ export default function PlaylistDrawer({
                 />
               </InputGroup>
             </FormControl>
+
+            {/* Next video play button */}
+            <Button
+              colorScheme='teal'
+              onClick={() => {
+                const newPlaylist = [...playList];
+                newPlaylist.shift();
+                handlePlaylistUpdate(newPlaylist);
+                console.log(newPlaylist);
+              }}
+              inlineSize={'full'}>
+              Next video
+            </Button>
+
+            {/* Video preview list */}
             <ListItem p='4'>
               <Image
                 sizes='full'

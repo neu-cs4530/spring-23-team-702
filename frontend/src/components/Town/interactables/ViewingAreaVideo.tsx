@@ -6,7 +6,7 @@ import ViewingAreaController from '../../../classes/ViewingAreaController';
 import useTownController from '../../../hooks/useTownController';
 import SelectVideoModal from './SelectVideoModal';
 import ViewingAreaInteractable from './ViewingArea';
-import WatchTogetherModal from './WatchTogetherModal';
+import WatchTogetherModal from './WatchTogether/WatchTogetherModal';
 
 const ALLOWED_DRIFT = 3;
 export class MockReactPlayer extends ReactPlayer {

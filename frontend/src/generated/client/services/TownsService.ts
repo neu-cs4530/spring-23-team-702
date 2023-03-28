@@ -22,7 +22,6 @@ export class TownsService {
      * @throws ApiError
      */
     public listTowns(): CancelablePromise<Array<Town>> {
-        console.log(this.httpRequest.config.BASE)
         return this.httpRequest.request({
             method: 'GET',
             url: '/towns',

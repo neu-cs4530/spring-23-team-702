@@ -34,13 +34,13 @@ export interface Player {
 export type XY = { x: number, y: number };
 
 export type Video = { 
-  title: string, 
-  url: string, 
-  durationSec: number, 
-  userID: string, 
-  pause: boolean, 
-  speed: number, 
-  elapsedTimeSec: number 
+  title: string;
+  url: string;
+  durationSec: number; 
+  userID: string;
+  pause: boolean; 
+  speed: number;
+  elapsedTimeSec: number; 
 };
 
 export interface PlayerLocation {

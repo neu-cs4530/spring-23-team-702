@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { assert } from 'console';
 
 const APIURL = 'https://www.googleapis.com/youtube/v3/';
 
@@ -16,6 +17,7 @@ export default async function getVideoDetail(videoURL: string): Promise<{
   title: string;
 }> {
   const apiKey = process.env.YOUTUBE_API_KEY;
+  assert(apiKey);
   const videoID = getVideoID(videoURL);
 
   const params = {

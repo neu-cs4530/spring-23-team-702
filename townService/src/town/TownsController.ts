@@ -30,6 +30,7 @@ import {
 import PosterSessionAreaReal from './PosterSessionArea';
 import { isPosterSessionArea, isWatchTogetherArea } from '../TestUtils';
 import WatchTogetherArea from './WatchTogetherArea';
+import getVideoDetail from '../api/YoutubeAPI';
 
 /**
  * This is the town route
@@ -440,10 +441,11 @@ export class TownsController extends Controller {
     if (!watchTogetherArea.hostID) {
       throw new InvalidParametersError('Cant add video to watch together with no host');
     }
+    const response = await getVideoDetail(requestBody.url);
     const newVideo: Video = {
-      title: requestBody.title,
+      title: response.title,
       url: requestBody.url,
-      thumbnail: '',
+      thumbnail: response.thumbnails,
       durationSec: requestBody.durationSec,
       userID: curPlayer.id,
       pause: true,

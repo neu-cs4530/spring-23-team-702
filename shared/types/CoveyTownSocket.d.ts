@@ -54,6 +54,7 @@ export interface PlayerLocation {
   moving: boolean;
   interactableID?: string;
 };
+
 export type ChatMessage = {
   author: string;
   sid: string;

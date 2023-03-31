@@ -35,6 +35,7 @@ export type XY = { x: number, y: number };
 
 export type Video = { 
   title: string;
+  thumbnail: string;
   url: string;
   durationSec: number; 
   userID: string;

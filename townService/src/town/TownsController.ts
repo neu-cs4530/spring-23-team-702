@@ -417,7 +417,7 @@ export class TownsController extends Controller {
    *          poster session specified does not exist, or if the poster session specified
    *          does not have an image
    */
-  @Post('{townID}/watchTogetherArea')
+  @Post('{townID}/watchTogetherArea') // Fixing
   @Response<InvalidParametersError>(400, 'Invalid values specified')
   public async pushWatchTogetherPlayList(
     @Path() townID: string,
@@ -443,6 +443,7 @@ export class TownsController extends Controller {
     const newVideo: Video = {
       title: requestBody.title,
       url: requestBody.url,
+      thumbnail: '',
       durationSec: requestBody.durationSec,
       userID: curPlayer.id,
       pause: true,

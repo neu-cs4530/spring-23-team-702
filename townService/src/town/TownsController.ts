@@ -423,7 +423,7 @@ export class TownsController extends Controller {
     @Path() townID: string,
     @Path() watchTogetherId: string,
     @Header('X-Session-Token') sessionToken: string,
-    @Body() requestBody: { title: string; url: string; durationSec: number },
+    @Body() requestBody: { url: string },
   ): Promise<Video> {
     const curTown = this._townsStore.getTownByID(townID);
     if (!curTown) {

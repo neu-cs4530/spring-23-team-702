@@ -1,7 +1,4 @@
 import {
-  Image,
-  List,
-  ListItem,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -15,6 +12,9 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import { TempVideo } from '../../../../types/CoveyTownSocket';
+import getVideoDetail from './YoutubeAPI';
+import Playlist from './PlayistVisualization';
 
 export default function PlaylistDrawer({
   drawerIsOpen,
@@ -24,8 +24,8 @@ export default function PlaylistDrawer({
 }: {
   drawerIsOpen: boolean;
   close: () => void;
-  playList: Array<string>;
-  handlePlaylistUpdate: (newVideoPlaylist: Array<string>) => void;
+  playList: Array<TempVideo>;
+  handlePlaylistUpdate: (newVideoPlaylist: Array<TempVideo>) => void;
 }): JSX.Element {
   const [inputVideoURL, setInputVideoURL] = useState<string>('');
 
@@ -34,12 +34,18 @@ export default function PlaylistDrawer({
 
   const isInValidYoutubeURL = !regExpURL.test(inputVideoURL) && !(inputVideoURL === '');
 
-  const handleYotubeVideoURL = () => {
+  const handleYotubeVideoURL = async () => {
     // check if it starts with youtube.com/youtu.be and has video id after v= with 11 digits id.
-    if (!isInValidYoutubeURL && !playList.includes(inputVideoURL)) {
+    if (!isInValidYoutubeURL && !(playList.filter(e => e.videoID === inputVideoURL).length > 0)) {
       // if matches, update the video playlist
       const newPlaylist = [...playList];
-      newPlaylist.push(inputVideoURL);
+      const apiResponse = await getVideoDetail(inputVideoURL);
+      const playlistItem: TempVideo = {
+        videoID: inputVideoURL,
+        videoThumbnail: apiResponse.thumbnails,
+        videoTitle: apiResponse.title,
+      };
+      newPlaylist.push(playlistItem);
       handlePlaylistUpdate(newPlaylist);
       setInputVideoURL('');
     }
@@ -58,51 +64,40 @@ export default function PlaylistDrawer({
         <DrawerHeader>Control panel</DrawerHeader>
 
         <DrawerBody>
-          <List spacing={3}>
-            {/* Video URL input box */}
-            <FormControl isInvalid={isInValidYoutubeURL}>
-              <FormLabel htmlFor='video'>Video URL</FormLabel>
-              <Input
-                id='video'
-                name='video'
-                value={inputVideoURL}
-                placeholder={'Paste youtube video url here'}
-                onChange={e => {
-                  setInputVideoURL(e.target.value);
-                }}
-                onKeyPress={e => {
-                  if (e.key === 'Enter') {
-                    handleYotubeVideoURL();
-                  }
-                }}
-              />
-              <FormErrorMessage>Please input a valid Youtube video URL</FormErrorMessage>
-            </FormControl>
-
-            {/* Next video play button */}
-            <Button
-              colorScheme='teal'
-              onClick={() => {
-                const newPlaylist = [...playList];
-                newPlaylist.shift();
-                handlePlaylistUpdate(newPlaylist);
-                console.log(newPlaylist);
+          {/* Video URL input box */}
+          <FormControl isInvalid={isInValidYoutubeURL}>
+            <FormLabel htmlFor='video'>Video URL</FormLabel>
+            <Input
+              id='video'
+              name='video'
+              value={inputVideoURL}
+              placeholder={'Paste youtube video url here'}
+              onChange={e => {
+                setInputVideoURL(e.target.value);
               }}
-              inlineSize={'full'}>
-              Next video
-            </Button>
+              onKeyPress={e => {
+                if (e.key === 'Enter') {
+                  handleYotubeVideoURL();
+                }
+              }}
+            />
+            <FormErrorMessage>Please input a valid Youtube video URL</FormErrorMessage>
+          </FormControl>
 
-            {/* Video preview list */}
-            <ListItem p='4'>
-              <Image
-                sizes='full'
-                objectFit='contain'
-                src='https://i.ytimg.com/vi/3r-gOSlYf00/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAxqTDBHAgKRDt-Pr8oqR-H0rxL_g'
-                alt='Dan Abramov'
-              />
-              Over 100 Things You Can Do With The Create Mod - Minecraft 1.18.2
-            </ListItem>
-          </List>
+          {/* Next video play button */}
+          <Button
+            colorScheme='teal'
+            onClick={() => {
+              const newPlaylist = [...playList];
+              newPlaylist.shift();
+              handlePlaylistUpdate(newPlaylist);
+              console.log(newPlaylist);
+            }}
+            inlineSize={'full'}>
+            Next video
+          </Button>
+          {/* Video preview list */}
+          <Playlist playlist={playList}></Playlist>
         </DrawerBody>
       </DrawerContent>
     </Drawer>

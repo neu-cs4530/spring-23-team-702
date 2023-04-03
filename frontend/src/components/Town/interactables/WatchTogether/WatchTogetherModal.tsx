@@ -17,22 +17,25 @@ import useTownController from '../../../../hooks/useTownController';
 import ParticipantList from '../../../VideoCall/VideoFrontend/components/ParticipantList/ParticipantList';
 import WatchTogetherYoutubePlayer from './YoutubePlayer';
 import PlaylistDrawer from './PlaylistDrawer';
+import { TempVideo } from '../../../../types/CoveyTownSocket';
 
 export default function WatchTogetherModal({
   viewingAreaController,
   reactPlayerRef,
   isPlaying,
+  hostID,
 }: {
   viewingAreaController: ViewingAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
   isPlaying: boolean;
+  hostID: string;
 }): JSX.Element {
   const coveyTownController = useTownController();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
-  const [playList, setPlaylist] = useState<Array<string>>([]);
+  const [playList, setPlaylist] = useState<Array<TempVideo>>([]);
 
-  const handlePlaylistUpdate = (newVideoPlaylist: Array<string>) => {
+  const handlePlaylistUpdate = (newVideoPlaylist: TempVideo[]) => {
     setPlaylist(newVideoPlaylist);
   };
 
@@ -102,6 +105,7 @@ export default function WatchTogetherModal({
               isPlaying={isPlaying}
               coveyTownController={coveyTownController}
               videoPlaylist={playList}
+              hostID={hostID}
             />
           </Flex>
         </ModalBody>

@@ -1,8 +1,10 @@
 import { Box } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import ViewingAreaController from '../../../../classes/ViewingAreaController';
 import TownController from '../../../../classes/TownController';
+import useTownController from '../../../../hooks/useTownController';
+import { TempVideo } from '../../../../types/CoveyTownSocket';
 
 export default function WatchTogetherModal({
   viewingAreaController,
@@ -10,13 +12,27 @@ export default function WatchTogetherModal({
   isPlaying,
   coveyTownController,
   videoPlaylist,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  hostID,
 }: {
   viewingAreaController: ViewingAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
   isPlaying: boolean;
   coveyTownController: TownController;
-  videoPlaylist: Array<string>;
+  videoPlaylist: Array<TempVideo>;
+  hostID: string;
 }): JSX.Element {
+  console.log(useTownController().ourPlayer.id);
+  const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
+
+  useEffect(() => {
+    if (videoPlaylist.length != 0) {
+      setCurrentPlayingVideo(videoPlaylist[0].videoID);
+    } else {
+      setCurrentPlayingVideo('');
+    }
+  }, [videoPlaylist]);
+
   return (
     <Box flex='4' bg='white'>
       <ReactPlayer
@@ -35,7 +51,7 @@ export default function WatchTogetherModal({
         width='100%'
         height='100%'
         controls={true}
-        url={videoPlaylist[0]}
+        url={currentPlayingVideo}
         playing={isPlaying}
         onProgress={state => {
           if (

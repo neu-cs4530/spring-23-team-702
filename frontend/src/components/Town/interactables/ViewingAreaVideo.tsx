@@ -40,9 +40,16 @@ export function ViewingAreaVideo({
   controller: ViewingAreaController;
 }): JSX.Element {
   const [isPlaying, setPlaying] = useState<boolean>(controller.isPlaying);
+  const [firstPLayer, setFirstPlayer] = useState<string>('');
   // const townController = useTownController();
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
+
+  const townController = useTownController();
+
+  if (firstPLayer === '') {
+    setFirstPlayer(townController.ourPlayer.id);
+  }
 
   useEffect(() => {
     const progressListener = (newTime: number) => {
@@ -64,6 +71,7 @@ export function ViewingAreaVideo({
       viewingAreaController={controller}
       reactPlayerRef={reactPlayerRef}
       isPlaying={isPlaying}
+      hostID={firstPLayer}
     />
     // <Container className='participant-wrapper'>
     //   Viewing Area: {controller.id}

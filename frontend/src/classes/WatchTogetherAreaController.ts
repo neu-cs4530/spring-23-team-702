@@ -89,7 +89,7 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
     this._model.video = updatedModel.video;
   }
 }
-  
+
 /**
  * A hook that returns the video given the controller
  */
@@ -103,7 +103,6 @@ export function useStars(controller: WatchTogetherAreaController): Video | undef
   }, [controller]);
   return video;
 }
-
 
 /**
  * A hook that returns the video given the controller

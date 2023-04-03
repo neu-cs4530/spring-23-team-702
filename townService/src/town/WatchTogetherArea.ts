@@ -60,8 +60,6 @@ export default class WatchTogetherArea extends InteractableArea {
       this._hostID = occupantsByID[Math.floor(Math.random() * occupantsByID.length)];
       this._emitAreaChanged();
     }
-
-    
   }
 
   /**

@@ -574,15 +574,17 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     await this._townsService.createPosterSessionArea(this.townID, this.sessionToken, newArea);
   }
 
-  //Waiting for npm run start of back end to work
-  // async createWatchTogetherArea(newArea: WatchTogetherAreaModel) {
-  //   console.warn('Intermediate watch together area: ' + JSON.stringify(newArea, null, 4));
-  //   await this._townsService.createWatchTogetherSessionArea(
-  //     this.townID,
-  //     this.sessionToken,
-  //     newArea,
-  //   );
-  // }
+  /**
+   * Create a new watch together area, sending the request to the townService. Throws an error if the request
+   * is not successful. Does not immediately update local state about the new watch together area - it will be
+   * updated once the townService creates the area and emits an interactableUpdate
+   *
+   * @param newArea
+   */
+  async createWatchTogetherArea(newArea: WatchTogetherAreaModel) {
+    console.warn('Intermediate watch together area: ' + JSON.stringify(newArea, null, 4));
+    await this._townsService.createWatchTogetherArea(this.townID, this.sessionToken, newArea);
+  }
 
   /**
    * Disconnect from the town, notifying the townService that we are leaving and returning
@@ -629,6 +631,8 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
             this._viewingAreas.push(new ViewingAreaController(eachInteractable));
           } else if (isPosterSessionArea(eachInteractable)) {
             this._posterSessionAreas.push(new PosterSessionAreaController(eachInteractable));
+          } else if (isWatchTogetherArea(eachInteractable)) {
+            this._watchTogetherAreas.push(new WatchTogetherAreaController(eachInteractable));
           }
         });
         this._userID = initialData.userID;
@@ -734,6 +738,15 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    */
   public emitPosterSessionAreaUpdate(posterSessionArea: PosterSessionAreaController) {
     this._socket.emit('interactableUpdate', posterSessionArea.posterSessionAreaModel());
+  }
+
+  /**
+   * Emit a watcj together area update to the townService
+   * @param posterSessionArea The Poster Session Area Controller that is updated and should be emitted
+   *    with the event
+   */
+  public emitWatchTogetherAreaUpdate(watchTogetherArea: WatchTogetherAreaController) {
+    this._socket.emit('interactableUpdate', watchTogetherArea.watchTogetherAreaModel());
   }
 
   /**
@@ -915,6 +928,19 @@ export function usePosterSessionAreaController(
   );
   if (!ret) {
     throw new Error(`Unable to locate poster session area id ${posterSessionAreaID}`);
+  }
+  return ret;
+}
+
+export function useWatchTogetherAreaController(
+  watchTogetherAreaID: string,
+): WatchTogetherAreaController {
+  const townController = useTownController();
+  const ret = townController.watchTogetherAreas.find(
+    eachArea => eachArea.id === watchTogetherAreaID,
+  );
+  if (!ret) {
+    throw new Error(`Unable to locate watch together area id ${watchTogetherAreaID}`);
   }
   return ret;
 }

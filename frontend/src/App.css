@@ -60,6 +60,8 @@
 
 .participant-wrapper {
   display: inline-block;
-  height: 220px;
-  width: 400px;
+  height: 100%;
+  width: 100%;
+  max-height: 220px;
+  max-width: 400px;
 }

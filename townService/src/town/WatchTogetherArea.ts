@@ -97,7 +97,7 @@ export default class WatchTogetherArea extends InteractableArea {
   ): WatchTogetherAreaModel {
     const { name, width, height } = mapObject;
     if (!width || !height) {
-      throw new Error(`Malformed viewing area ${name}`);
+      throw new Error(`Malformed watch together area ${name}`);
     }
     const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
     return new WatchTogetherArea(

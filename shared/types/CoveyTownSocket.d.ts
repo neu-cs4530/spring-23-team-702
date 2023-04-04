@@ -96,6 +96,12 @@ export interface WatchTogetherArea {
   playList: Video[];
 }
 
+export interface TempVideo {
+  videoID: string;
+  videoThumbnail: string;
+  videoTitle: string;
+}
+
 export interface ServerToClientEvents {
   playerMoved: (movedPlayer: Player) => void;
   playerDisconnect: (disconnectedPlayer: Player) => void;

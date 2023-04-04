@@ -4,7 +4,7 @@ import { BroadcastOperator } from 'socket.io';
 import IVideoClient from '../lib/IVideoClient';
 import Player from '../lib/Player';
 import TwilioVideo from '../lib/TwilioVideo';
-import { isPosterSessionArea, isViewingArea } from '../TestUtils';
+import { isPosterSessionArea, isViewingArea, isWatchTogetherArea } from '../TestUtils';
 import {
   ChatMessage,
   ConversationArea as ConversationAreaModel,
@@ -15,11 +15,13 @@ import {
   SocketData,
   ViewingArea as ViewingAreaModel,
   PosterSessionArea as PosterSessionAreaModel,
+  WatchTogetherArea as WatchTogetherAreaModel,
 } from '../types/CoveyTownSocket';
 import ConversationArea from './ConversationArea';
 import InteractableArea from './InteractableArea';
 import ViewingArea from './ViewingArea';
 import PosterSessionArea from './PosterSessionArea';
+import WatchTogetherArea from './WatchTogetherArea';
 
 /**
  * The Town class implements the logic for each town: managing the various events that
@@ -174,6 +176,16 @@ export default class Town {
         // updatemodel if theres an existing poster session area with the same ID
         if (existingPosterSessionAreaArea) {
           existingPosterSessionAreaArea.updateModel(update);
+        }
+      } else if (isWatchTogetherArea(update)) {
+        newPlayer.townEmitter.emit('interactableUpdate', update);
+        const existingWatchTogetherArea = <WatchTogetherArea>(
+          this._interactables.find(
+            area => area.id === update.id && area instanceof WatchTogetherArea,
+          )
+        );
+        if (existingWatchTogetherArea) {
+          existingWatchTogetherArea.updateModel(update);
         }
       }
     });
@@ -348,6 +360,37 @@ export default class Town {
   }
 
   /**
+   * Creates a new watch together area in this town if there is not currently an active
+   * watch together area with the same ID. The watch together area ID must match the name of a
+   * watch together area that exists in this town's map, and the watch together area must not
+   * already have a host player.
+   *
+   * If successful creating the watch together area, this method:
+   *    Adds any players who are in the region defined by the watch together area to it
+   *    Notifies all players in the town that the watch together area has been updated by
+   *      emitting an interactableUpdate event
+   *
+   * @param watchTogetherArea Information describing the watch together area to create.
+   *
+   * @returns True if the watch together area was created or false if there is no known
+   * watch together area with the specified ID or if there is already an active watch together area
+   * with the specified ID or if there is no host player specified.
+   */
+  public addWatchTogetherArea(watchTogetherArea: WatchTogetherAreaModel): boolean {
+    const area = this._interactables.find(
+      eachArea => eachArea.id === watchTogetherArea.id,
+    ) as WatchTogetherArea;
+    // if the exisiting area is already occupied or the new area doesn't have a host.
+    if (!area || area.hostID || !watchTogetherArea.hostID) {
+      return false;
+    }
+    area.updateModel(watchTogetherArea);
+    area.addPlayersWithinBounds(this._players);
+    this._broadcastEmitter.emit('interactableUpdate', area.toModel());
+    return true;
+  }
+
+  /**
    * Fetch a player's session based on the provided session token. Returns undefined if the
    * session token is not valid.
    *
@@ -419,6 +462,10 @@ export default class Town {
     const posterSessionAreas = objectLayer.objects
       .filter(eachObject => eachObject.type === 'PosterSessionArea')
       .map(eachPSAreaObj => PosterSessionArea.fromMapObject(eachPSAreaObj, this._broadcastEmitter));
+
+    const watchTogetherAreas = objectLayer.objects
+      .filter(eachObject => eachObject.type === 'WatchTogetherArea')
+      .map(eachPSAreaObj => WatchTogetherArea.fromMapObject(eachPSAreaObj, this._broadcastEmitter));
 
     this._interactables = this._interactables
       .concat(viewingAreas)

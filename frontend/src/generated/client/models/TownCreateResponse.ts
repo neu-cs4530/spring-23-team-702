@@ -15,4 +15,3 @@ export type TownCreateResponse = {
      */
     townUpdatePassword: string;
 };
-

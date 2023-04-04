@@ -1,4 +1,4 @@
-// import { Container } from '@chakra-ui/react';
+import { Container } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useInteractable, useViewingAreaController } from '../../../classes/TownController';
@@ -6,7 +6,6 @@ import ViewingAreaController from '../../../classes/ViewingAreaController';
 import useTownController from '../../../hooks/useTownController';
 import SelectVideoModal from './SelectVideoModal';
 import ViewingAreaInteractable from './ViewingArea';
-import WatchTogetherModal from './WatchTogether/WatchTogetherModal';
 
 const ALLOWED_DRIFT = 3;
 export class MockReactPlayer extends ReactPlayer {
@@ -40,16 +39,9 @@ export function ViewingAreaVideo({
   controller: ViewingAreaController;
 }): JSX.Element {
   const [isPlaying, setPlaying] = useState<boolean>(controller.isPlaying);
-  const [firstPLayer, setFirstPlayer] = useState<string>('');
-  // const townController = useTownController();
-
-  const reactPlayerRef = useRef<ReactPlayer>(null);
-
   const townController = useTownController();
 
-  if (firstPLayer === '') {
-    setFirstPlayer(townController.ourPlayer.id);
-  }
+  const reactPlayerRef = useRef<ReactPlayer>(null);
 
   useEffect(() => {
     const progressListener = (newTime: number) => {
@@ -67,57 +59,51 @@ export function ViewingAreaVideo({
   }, [controller]);
 
   return (
-    <WatchTogetherModal
-      viewingAreaController={controller}
-      reactPlayerRef={reactPlayerRef}
-      isPlaying={isPlaying}
-      hostID={firstPLayer}
-    />
-    // <Container className='participant-wrapper'>
-    //   Viewing Area: {controller.id}
-    //   <ReactPlayer
-    //     url={controller.video}
-    //     ref={reactPlayerRef}
-    //     config={{
-    //       youtube: {
-    //         playerVars: {
-    //           // disable skipping time via keyboard to avoid weirdness with chat, etc
-    //           disablekb: 1,
-    //           autoplay: 1,
-    //           // modestbranding: 1,
-    //         },
-    //       },
-    //     }}
-    //     playing={isPlaying}
-    //     onProgress={state => {
-    //       if (state.playedSeconds != 0 && state.playedSeconds != controller.elapsedTimeSec) {
-    //         controller.elapsedTimeSec = state.playedSeconds;
-    //         townController.emitViewingAreaUpdate(controller);
-    //       }
-    //     }}
-    //     onPlay={() => {
-    //       if (!controller.isPlaying) {
-    //         controller.isPlaying = true;
-    //         townController.emitViewingAreaUpdate(controller);
-    //       }
-    //     }}
-    //     onPause={() => {
-    //       if (controller.isPlaying) {
-    //         controller.isPlaying = false;
-    //         townController.emitViewingAreaUpdate(controller);
-    //       }
-    //     }}
-    //     onEnded={() => {
-    //       if (controller.isPlaying) {
-    //         controller.isPlaying = false;
-    //         townController.emitViewingAreaUpdate(controller);
-    //       }
-    //     }}
-    //     controls={true}
-    //     width='100%'
-    //     height='100%'
-    //   />
-    // </Container>
+    <Container className='participant-wrapper'>
+      Viewing Area: {controller.id}
+      <ReactPlayer
+        url={controller.video}
+        ref={reactPlayerRef}
+        config={{
+          youtube: {
+            playerVars: {
+              // disable skipping time via keyboard to avoid weirdness with chat, etc
+              disablekb: 1,
+              autoplay: 1,
+              // modestbranding: 1,
+            },
+          },
+        }}
+        playing={isPlaying}
+        onProgress={state => {
+          if (state.playedSeconds != 0 && state.playedSeconds != controller.elapsedTimeSec) {
+            controller.elapsedTimeSec = state.playedSeconds;
+            townController.emitViewingAreaUpdate(controller);
+          }
+        }}
+        onPlay={() => {
+          if (!controller.isPlaying) {
+            controller.isPlaying = true;
+            townController.emitViewingAreaUpdate(controller);
+          }
+        }}
+        onPause={() => {
+          if (controller.isPlaying) {
+            controller.isPlaying = false;
+            townController.emitViewingAreaUpdate(controller);
+          }
+        }}
+        onEnded={() => {
+          if (controller.isPlaying) {
+            controller.isPlaying = false;
+            townController.emitViewingAreaUpdate(controller);
+          }
+        }}
+        controls={true}
+        width='100%'
+        height='100%'
+      />
+    </Container>
   );
 }
 

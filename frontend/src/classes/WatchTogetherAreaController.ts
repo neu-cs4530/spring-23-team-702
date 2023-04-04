@@ -97,7 +97,7 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
 /**
  * A hook that returns the video given the controller
  */
-export function useStars(controller: WatchTogetherAreaController): Video | undefined {
+export function useVideo(controller: WatchTogetherAreaController): Video | undefined {
   const [video, setVideo] = useState(controller.video);
   useEffect(() => {
     controller.addListener('videoChange', setVideo);

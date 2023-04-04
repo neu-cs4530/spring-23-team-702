@@ -43,19 +43,19 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
     return this._model.hostID;
   }
 
-  public watchTogetherAreaModel(): WatchTogetherAreaModel{
+  public watchTogetherAreaModel(): WatchTogetherAreaModel {
     return this._model;
   }
 
-  /**
-   * Set the host for the model, may need to consider the host logic
-   */
-  public set host(host: string | undefined) {
-    if (this._model.hostID !== host) {
-      this._model.hostID = host;
-      this.emit('hostChange', host);
-    }
-  }
+  // /**
+  //  * Set the host for the model, may need to consider the host logic
+  //  */
+  // public set host(host: string | undefined) {
+  //   if (this._model.hostID !== host) {
+  //     this._model.hostID = host;
+  //     this.emit('hostChange', host);
+  //   }
+  // }
 
   public get playList(): Video[] {
     return this._model.playList;

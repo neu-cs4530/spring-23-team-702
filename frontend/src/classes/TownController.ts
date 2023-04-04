@@ -945,7 +945,6 @@ export function useWatchTogetherAreaController(
   return ret;
 }
 
-
 function samePlayers(a1: PlayerController[], a2: PlayerController[]) {
   if (a1.length !== a2.length) return false;
   const ids1 = a1.map(p => p.id).sort();

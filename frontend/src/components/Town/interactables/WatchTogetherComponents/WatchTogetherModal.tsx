@@ -18,14 +18,15 @@ import ParticipantList from '../../../VideoCall/VideoFrontend/components/Partici
 import WatchTogetherYoutubePlayer from './YoutubePlayer';
 import PlaylistDrawer from './PlaylistDrawer';
 import { TempVideo } from '../../../../types/CoveyTownSocket';
+import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 
 export default function WatchTogetherModal({
-  viewingAreaController,
+  watchTogetherAreaController,
   reactPlayerRef,
   isPlaying,
   hostID,
 }: {
-  viewingAreaController: ViewingAreaController;
+  watchTogetherAreaController: WatchTogetherAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
   isPlaying: boolean;
   hostID: string;
@@ -100,7 +101,7 @@ export default function WatchTogetherModal({
             </Box>
             {/*Video play box */}
             <WatchTogetherYoutubePlayer
-              viewingAreaController={viewingAreaController}
+              watchTogetherAreaController={watchTogetherAreaController}
               reactPlayerRef={reactPlayerRef}
               isPlaying={isPlaying}
               coveyTownController={coveyTownController}

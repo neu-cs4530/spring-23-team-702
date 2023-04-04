@@ -171,6 +171,73 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"Video": {
+				"properties": {
+					"elapsedTimeSec": {
+						"type": "number",
+						"format": "double"
+					},
+					"speed": {
+						"type": "number",
+						"format": "double"
+					},
+					"pause": {
+						"type": "boolean"
+					},
+					"userID": {
+						"type": "string"
+					},
+					"durationSec": {
+						"type": "number",
+						"format": "double"
+					},
+					"url": {
+						"type": "string"
+					},
+					"thumbnail": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"elapsedTimeSec",
+					"speed",
+					"pause",
+					"userID",
+					"durationSec",
+					"url",
+					"thumbnail",
+					"title"
+				],
+				"type": "object"
+			},
+			"WatchTogetherArea": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"hostID": {
+						"type": "string"
+					},
+					"video": {
+						"$ref": "#/components/schemas/Video"
+					},
+					"playList": {
+						"items": {
+							"$ref": "#/components/schemas/Video"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"playList"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -651,6 +718,63 @@
 						}
 					}
 				]
+			}
+		},
+		"/towns/{townID}/watchTogetherArea": {
+			"post": {
+				"operationId": "CreateWatchTogetherArea",
+				"responses": {
+					"204": {
+						"description": "No content"
+					},
+					"400": {
+						"description": "Invalid values specified",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InvalidParametersError"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a watch together area in a given town",
+				"tags": [
+					"towns"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "ID of the town in which to create the new watch together area",
+						"in": "path",
+						"name": "townID",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"in": "header",
+						"name": "X-Session-Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "The new watch together area to create",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/WatchTogetherArea",
+								"description": "The new watch together area to create"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

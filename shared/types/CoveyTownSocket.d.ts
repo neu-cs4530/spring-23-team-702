@@ -17,7 +17,7 @@ export type TownJoinResponse = {
   interactables: Interactable[];
 }
 
-export type Interactable = ViewingArea | ConversationArea | PosterSessionArea;
+export type Interactable = ViewingArea | ConversationArea | PosterSessionArea | WatchTogetherArea;
 
 export type TownSettingsUpdate = {
   friendlyName?: string;
@@ -33,7 +33,16 @@ export interface Player {
 
 export type XY = { x: number, y: number };
 
-export type Video = { title: string, url: string, durationSec: number, userID: string, pause: boolean, speed: number, elapsedTimeSec: number };
+export type Video = { 
+  title: string;
+  thumbnail: string;
+  url: string;
+  durationSec: number; 
+  userID: string;
+  pause: boolean; 
+  speed: number;
+  elapsedTimeSec: number; 
+};
 
 export interface PlayerLocation {
   /* The CENTER x coordinate of this player's location */
@@ -82,8 +91,7 @@ export interface PosterSessionArea {
 
 export interface WatchTogetherArea {
   id: string;
-  hostID: string;
-  viewerByID: string[];
+  hostID?: string;
   video?: Video;
   playList: Video[];
 }

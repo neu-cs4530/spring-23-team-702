@@ -15,11 +15,13 @@ import {
   SocketData,
   ViewingArea as ViewingAreaModel,
   PosterSessionArea as PosterSessionAreaModel,
+  WatchTogetherArea as WatchTogetherAreaModel,
 } from '../types/CoveyTownSocket';
 import ConversationArea from './ConversationArea';
 import InteractableArea from './InteractableArea';
 import ViewingArea from './ViewingArea';
 import PosterSessionArea from './PosterSessionArea';
+import WatchTogetherArea from './WatchTogetherArea';
 
 /**
  * The Town class implements the logic for each town: managing the various events that
@@ -344,6 +346,37 @@ export default class Town {
     existingPosterSessionArea.updateModel(posterSessionArea);
     existingPosterSessionArea.addPlayersWithinBounds(this._players);
     this._broadcastEmitter.emit('interactableUpdate', existingPosterSessionArea.toModel());
+    return true;
+  }
+
+  /**
+   * Creates a new watch together area in this town if there is not currently an active
+   * watch together area with the same ID. The watch together area ID must match the name of a
+   * watch together area that exists in this town's map, and the watch together area must not
+   * already have a host player.
+   *
+   * If successful creating the watch together area, this method:
+   *    Adds any players who are in the region defined by the watch together area to it
+   *    Notifies all players in the town that the watch together area has been updated by
+   *      emitting an interactableUpdate event
+   *
+   * @param watchTogetherArea Information describing the watch together area to create.
+   *
+   * @returns True if the watch together area was created or false if there is no known
+   * watch together area with the specified ID or if there is already an active watch together area
+   * with the specified ID or if there is no host player specified.
+   */
+  public addWatchTogetherArea(watchTogetherArea: WatchTogetherAreaModel): boolean {
+    const area = this._interactables.find(
+      eachArea => eachArea.id === watchTogetherArea.id,
+    ) as WatchTogetherArea;
+    // if the exisiting area is already occupied or the new area doesn't have a host.
+    if (!area || area.hostID || !watchTogetherArea.hostID) {
+      return false;
+    }
+    area.updateModel(watchTogetherArea);
+    area.addPlayersWithinBounds(this._players);
+    this._broadcastEmitter.emit('interactableUpdate', area.toModel());
     return true;
   }
 

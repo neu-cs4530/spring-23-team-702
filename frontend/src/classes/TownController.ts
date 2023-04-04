@@ -30,6 +30,7 @@ import PlayerController from './PlayerController';
 import ViewingAreaController from './ViewingAreaController';
 import PosterSessionAreaController from './PosterSessionAreaController';
 import WatchTogetherAreaController from './WatchTogetherAreaController';
+import WatchTogetherArea from '../components/Town/interactables/WatchTogether';
 
 const CALCULATE_NEARBY_PLAYERS_DELAY = 300;
 
@@ -699,11 +700,11 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   /**
    * Retrieve the Watch Together Area controller that corresponds to a WatchTogetherAreaModel, creating one if necessary
    *
-   * @param posterSessionArea
+   * @param watchTogetherArea
    * @returns
    */
   public getWatchTogetherAreaController(
-    watchTogetherArea: WatchTogetherAreaModel,
+    watchTogetherArea: WatchTogetherArea,
   ): WatchTogetherAreaController {
     const existingController = this._watchTogetherAreas.find(
       eachExistingArea => eachExistingArea.id === watchTogetherArea.id,

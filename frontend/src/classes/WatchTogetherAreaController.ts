@@ -43,6 +43,10 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
     return this._model.hostID;
   }
 
+  public watchTogetherAreaModel(): WatchTogetherAreaModel{
+    return this._model;
+  }
+
   /**
    * Set the host for the model, may need to consider the host logic
    */

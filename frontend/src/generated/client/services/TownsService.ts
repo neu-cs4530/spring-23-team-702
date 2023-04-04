@@ -11,6 +11,7 @@ import type { ViewingArea } from '../models/ViewingArea';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+import { WatchTogetherArea } from '../models/WatchTogetherArea';
 
 export class TownsService {
 
@@ -193,6 +194,28 @@ requestBody: PosterSessionArea,
             },
         });
     }
+
+    public createWatchTogetherArea(
+        townId: string,
+        xSessionToken: string,
+        requestBody: WatchTogetherArea,
+        ): CancelablePromise<void> {
+                return this.httpRequest.request({
+                    method: 'POST',
+                    url: '/towns/{townID}/watchTogetherArea',
+                    path: {
+                        'townID': townId,
+                    },
+                    headers: {
+                        'X-Session-Token': xSessionToken,
+                    },
+                    body: requestBody,
+                    mediaType: 'application/json',
+                    errors: {
+                        400: `Invalid values specified`,
+                    },
+                });
+            }
 
     /**
      * Gets the image contents of a given poster session area in a given town

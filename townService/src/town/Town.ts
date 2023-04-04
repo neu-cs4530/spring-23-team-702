@@ -4,7 +4,7 @@ import { BroadcastOperator } from 'socket.io';
 import IVideoClient from '../lib/IVideoClient';
 import Player from '../lib/Player';
 import TwilioVideo from '../lib/TwilioVideo';
-import { isPosterSessionArea, isViewingArea } from '../TestUtils';
+import { isPosterSessionArea, isViewingArea, isWatchTogetherArea } from '../TestUtils';
 import {
   ChatMessage,
   ConversationArea as ConversationAreaModel,
@@ -176,6 +176,16 @@ export default class Town {
         // updatemodel if theres an existing poster session area with the same ID
         if (existingPosterSessionAreaArea) {
           existingPosterSessionAreaArea.updateModel(update);
+        }
+      } else if (isWatchTogetherArea(update)) {
+        newPlayer.townEmitter.emit('interactableUpdate', update);
+        const existingWatchTogetherArea = <WatchTogetherArea>(
+          this._interactables.find(
+            area => area.id === update.id && area instanceof WatchTogetherArea,
+          )
+        );
+        if (existingWatchTogetherArea) {
+          existingWatchTogetherArea.updateModel(update);
         }
       }
     });
@@ -452,6 +462,10 @@ export default class Town {
     const posterSessionAreas = objectLayer.objects
       .filter(eachObject => eachObject.type === 'PosterSessionArea')
       .map(eachPSAreaObj => PosterSessionArea.fromMapObject(eachPSAreaObj, this._broadcastEmitter));
+
+    const watchTogetherAreas = objectLayer.objects
+      .filter(eachObject => eachObject.type === 'WatchTogetherArea')
+      .map(eachPSAreaObj => WatchTogetherArea.fromMapObject(eachPSAreaObj, this._broadcastEmitter));
 
     this._interactables = this._interactables
       .concat(viewingAreas)

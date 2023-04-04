@@ -17,12 +17,19 @@ import {
   TownSettingsUpdate,
   ViewingArea as ViewingAreaModel,
   PosterSessionArea as PosterSessionAreaModel,
+  WatchTogetherArea as WatchTogetherAreaModel,
 } from '../types/CoveyTownSocket';
-import { isConversationArea, isViewingArea, isPosterSessionArea } from '../types/TypeUtils';
+import {
+  isConversationArea,
+  isViewingArea,
+  isPosterSessionArea,
+  isWatchTogetherArea,
+} from '../types/TypeUtils';
 import ConversationAreaController from './ConversationAreaController';
 import PlayerController from './PlayerController';
 import ViewingAreaController from './ViewingAreaController';
 import PosterSessionAreaController from './PosterSessionAreaController';
+import WatchTogetherAreaController from './WatchTogetherAreaController';
 
 const CALCULATE_NEARBY_PLAYERS_DELAY = 300;
 
@@ -77,6 +84,12 @@ export type TownEvents = {
    * the town controller's record of poster session areas.
    */
   posterSessionAreasChanged: (newPosterSessionAreas: PosterSessionAreaController[]) => void;
+
+  /**
+   * An event that indicates that the set of watch together areas has changed. This event is emitted after updating
+   * the town controller's record of watch together areas.
+   */
+  watchTogetherAreasChanged: (newWatchTogetherAreas: WatchTogetherAreaController[]) => void;
   /**
    * An event that indicates that a new chat message has been received, which is the parameter passed to the listener
    */
@@ -199,6 +212,8 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   private _viewingAreas: ViewingAreaController[] = [];
 
   private _posterSessionAreas: PosterSessionAreaController[] = [];
+
+  private _watchTogetherAreas: WatchTogetherAreaController[] = [];
 
   public constructor({ userName, townID, loginController }: ConnectionProperties) {
     super();
@@ -328,6 +343,15 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     this.emit('posterSessionAreasChanged', newPosterSessionAreas);
   }
 
+  public get watchTogetherAreas() {
+    return this._watchTogetherAreas;
+  }
+
+  public set watchTogetherAreas(newWatchTogetherAreas: WatchTogetherAreaController[]) {
+    this._watchTogetherAreas = newWatchTogetherAreas;
+    this.emit('watchTogetherAreasChanged', newWatchTogetherAreas);
+  }
+
   /**
    * Begin interacting with an interactable object. Emits an event to all listeners.
    * @param interactedObj
@@ -451,6 +475,11 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
         if (relArea) {
           relArea.updateFrom(interactable);
         }
+      } else if (isWatchTogetherArea(interactable)) {
+        const relArea = this.watchTogetherAreas.find(area => area.id == interactable.id);
+        if (relArea) {
+          relArea.updateFrom(interactable);
+        }
       }
     });
   }
@@ -544,6 +573,16 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     console.warn('Intermediate poster session: ' + JSON.stringify(newArea, null, 4));
     await this._townsService.createPosterSessionArea(this.townID, this.sessionToken, newArea);
   }
+
+  //Waiting for npm run start of back end to work
+  // async createWatchTogetherArea(newArea: WatchTogetherAreaModel) {
+  //   console.warn('Intermediate watch together area: ' + JSON.stringify(newArea, null, 4));
+  //   await this._townsService.createWatchTogetherSessionArea(
+  //     this.townID,
+  //     this.sessionToken,
+  //     newArea,
+  //   );
+  // }
 
   /**
    * Disconnect from the town, notifying the townService that we are leaving and returning
@@ -649,6 +688,32 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
         imageContents: undefined,
       });
       this._posterSessionAreas.push(newController);
+      return newController;
+    }
+  }
+
+  /**
+   * Retrieve the Watch Together Area controller that corresponds to a WatchTogetherAreaModel, creating one if necessary
+   *
+   * @param posterSessionArea
+   * @returns
+   */
+  public getWatchTogetherAreaController(
+    watchTogetherArea: WatchTogetherAreaModel,
+  ): WatchTogetherAreaController {
+    const existingController = this._watchTogetherAreas.find(
+      eachExistingArea => eachExistingArea.id === watchTogetherArea.id,
+    );
+    if (existingController) {
+      return existingController;
+    } else {
+      const newController = new WatchTogetherAreaController({
+        id: watchTogetherArea.id,
+        hostID: undefined,
+        playList: watchTogetherArea.playList,
+        video: undefined, // currently keep both host and video as undefined when created
+      });
+      this._watchTogetherAreas.push(newController);
       return newController;
     }
   }

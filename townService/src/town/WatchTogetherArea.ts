@@ -54,12 +54,12 @@ export default class WatchTogetherArea extends InteractableArea {
       this._video = undefined;
       this._hostID = undefined;
       this._playList = [];
+      this._emitAreaChanged();
     } else if (this.hostID !== undefined && player.id === this.hostID) {
       const { occupantsByID } = this;
       this._hostID = occupantsByID[Math.floor(Math.random() * occupantsByID.length)];
+      this._emitAreaChanged();
     }
-
-    this._emitAreaChanged();
   }
 
   /**

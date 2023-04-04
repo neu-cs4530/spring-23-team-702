@@ -49,7 +49,6 @@
     },
     "dependencies": {
         "@types/ramda": "^0.27.34",
-        "iso8601-duration": "^2.1.1",
         "ramda": "^0.27.1",
         "typescript-is": "^0.17.0"
     },

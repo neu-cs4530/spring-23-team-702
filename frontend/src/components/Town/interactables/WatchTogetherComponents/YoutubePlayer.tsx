@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import TownController from '../../../../classes/TownController';
 import useTownController from '../../../../hooks/useTownController';
-import { TempVideo, Video } from '../../../../types/CoveyTownSocket';
+import { Video } from '../../../../types/CoveyTownSocket';
 import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 
 export default function WatchTogetherModal({

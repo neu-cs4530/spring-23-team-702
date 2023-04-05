@@ -742,7 +742,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   }
 
   /**
-   * Emit a watcj together area update to the townService
+   * Emit a watch together area update to the townService
    * @param posterSessionArea The Poster Session Area Controller that is updated and should be emitted
    *    with the event
    */

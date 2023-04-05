@@ -210,7 +210,7 @@ export class TownsService {
     ): CancelablePromise<string> {
         return this.httpRequest.request({
             method: 'PATCH',
-            url: '/towns/{townID}/{posterSessionId}/imageContents',
+            url: '/towns/{townID}/{posterSeswatchTogetherAreaControllersionId}/imageContents',
             path: {
                 'townID': townId,
                 'posterSessionId': posterSessionId,

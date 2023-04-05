@@ -43,19 +43,15 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
     return this._model.hostID;
   }
 
-  public watchTogetherAreaModel(): WatchTogetherAreaModel {
-    return this._model;
+  /**
+   * Set the host for the model, may need to consider the host logic
+   */
+  public set host(host: string | undefined) {
+    if (this._model.hostID !== host) {
+      this._model.hostID = host;
+      this.emit('hostChange', host);
+    }
   }
-
-  // /**
-  //  * Set the host for the model, may need to consider the host logic
-  //  */
-  // public set host(host: string | undefined) {
-  //   if (this._model.hostID !== host) {
-  //     this._model.hostID = host;
-  //     this.emit('hostChange', host);
-  //   }
-  // }
 
   public get playList(): Video[] {
     return this._model.playList;
@@ -87,6 +83,10 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
     }
   }
 
+  public watchTogetherAreaModel(): WatchTogetherAreaModel {
+    return this._model;
+  }
+
   public updateFrom(updatedModel: WatchTogetherAreaModel): void {
     this._model.hostID = updatedModel.hostID;
     this._model.playList = updatedModel.playList;
@@ -97,7 +97,7 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
 /**
  * A hook that returns the video given the controller
  */
-export function useStars(controller: WatchTogetherAreaController): Video | undefined {
+export function useVideo(controller: WatchTogetherAreaController): Video | undefined {
   const [video, setVideo] = useState(controller.video);
   useEffect(() => {
     controller.addListener('videoChange', setVideo);

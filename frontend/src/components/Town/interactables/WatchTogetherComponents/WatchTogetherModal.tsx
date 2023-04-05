@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Button,
@@ -77,7 +78,7 @@ export function WatchTogetherVideo({
         });
       }
     }
-  }, [coveyTownController, toast]);
+  }, [coveyTownController, toast, watchTogetherAreaController.id]);
 
   if (hostID === undefined && watchTogetherAreaController) {
     console.log('found someone');

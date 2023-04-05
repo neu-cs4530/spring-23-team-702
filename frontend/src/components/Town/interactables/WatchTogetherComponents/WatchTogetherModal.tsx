@@ -10,27 +10,26 @@ import {
   ModalOverlay,
   Center,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
-import ViewingAreaController from '../../../../classes/ViewingAreaController';
 import useTownController from '../../../../hooks/useTownController';
 import ParticipantList from '../../../VideoCall/VideoFrontend/components/ParticipantList/ParticipantList';
 import WatchTogetherYoutubePlayer from './YoutubePlayer';
 import PlaylistDrawer from './PlaylistDrawer';
 import { TempVideo } from '../../../../types/CoveyTownSocket';
+import {
+  useInteractable,
+  useWatchTogetherAreaController,
+} from '../../../../classes/TownController';
+import WatchTogetherAreaInteractable from '../WatchTogetherArea';
 
-export default function WatchTogetherModal({
-  viewingAreaController,
-  reactPlayerRef,
-  isPlaying,
-  hostID,
+export function WatchTogetherVideo({
+  watchTogetherArea,
 }: {
-  viewingAreaController: ViewingAreaController;
-  reactPlayerRef: React.RefObject<ReactPlayer>;
-  isPlaying: boolean;
-  hostID: string;
+  watchTogetherArea: WatchTogetherAreaInteractable;
 }): JSX.Element {
   const coveyTownController = useTownController();
+  const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
   const [playList, setPlaylist] = useState<Array<TempVideo>>([]);
@@ -38,6 +37,8 @@ export default function WatchTogetherModal({
   const handlePlaylistUpdate = (newVideoPlaylist: TempVideo[]) => {
     setPlaylist(newVideoPlaylist);
   };
+
+  const reactPlayerRef = useRef<ReactPlayer>(null);
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -54,7 +55,6 @@ export default function WatchTogetherModal({
       motionPreset='slideInBottom'
       onClose={() => {
         setModalIsOpen(false);
-        coveyTownController.unPause();
       }}>
       <ModalOverlay />
       <ModalContent>
@@ -100,16 +100,27 @@ export default function WatchTogetherModal({
             </Box>
             {/*Video play box */}
             <WatchTogetherYoutubePlayer
-              viewingAreaController={viewingAreaController}
+              watchTogetherAreaController={watchTogetherAreaController}
               reactPlayerRef={reactPlayerRef}
-              isPlaying={isPlaying}
               coveyTownController={coveyTownController}
               videoPlaylist={playList}
-              hostID={hostID}
             />
           </Flex>
         </ModalBody>
       </ModalContent>
     </Modal>
   );
+}
+/**
+ * The ViewingAreaWrapper is suitable to be *always* rendered inside of a town, and
+ * will activate only if the player begins interacting with a viewing area.
+ */
+export default function WatcherTogetherAreaWrapper(): JSX.Element {
+  const watchTogetherArea = useInteractable<WatchTogetherAreaInteractable>('watchTogetherArea');
+  console.log(watchTogetherArea);
+  if (watchTogetherArea) {
+    console.log('created a watch together area');
+    return <WatchTogetherVideo watchTogetherArea={watchTogetherArea} />;
+  }
+  return <></>;
 }

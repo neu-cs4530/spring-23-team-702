@@ -1,26 +1,21 @@
 import { Box } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
-import ViewingAreaController from '../../../../classes/ViewingAreaController';
 import TownController from '../../../../classes/TownController';
 import useTownController from '../../../../hooks/useTownController';
 import { TempVideo } from '../../../../types/CoveyTownSocket';
+import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 
 export default function WatchTogetherModal({
-  viewingAreaController,
+  watchTogetherAreaController,
   reactPlayerRef,
-  isPlaying,
   coveyTownController,
   videoPlaylist,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  hostID,
 }: {
-  viewingAreaController: ViewingAreaController;
+  watchTogetherAreaController: WatchTogetherAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
-  isPlaying: boolean;
   coveyTownController: TownController;
   videoPlaylist: Array<TempVideo>;
-  hostID: string;
 }): JSX.Element {
   console.log(useTownController().ourPlayer.id);
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
@@ -52,35 +47,35 @@ export default function WatchTogetherModal({
         height='100%'
         controls={true}
         url={currentPlayingVideo}
-        playing={isPlaying}
-        onProgress={state => {
-          if (
-            state.playedSeconds != 0 &&
-            state.playedSeconds != viewingAreaController.elapsedTimeSec
-          ) {
-            viewingAreaController.elapsedTimeSec = state.playedSeconds;
-            coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-          }
-        }}
-        onPlay={() => {
-          if (!viewingAreaController.isPlaying) {
-            viewingAreaController.isPlaying = true;
-            coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-          }
-        }}
-        onPause={() => {
-          if (viewingAreaController.isPlaying) {
-            // if(ViewingAreaController.host ==  coveyTownController.ourPlayer.id)
-            viewingAreaController.isPlaying = false;
-            coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-          }
-        }}
-        onEnded={() => {
-          if (viewingAreaController.isPlaying) {
-            viewingAreaController.isPlaying = false;
-            coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-          }
-        }}
+        playing={true}
+        // onProgress={state => {
+        //   if (
+        //     state.playedSeconds != 0 &&
+        //     state.playedSeconds != viewingAreaController.elapsedTimeSec
+        //   ) {
+        //     viewingAreaController.elapsedTimeSec = state.playedSeconds;
+        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+        //   }
+        // }}
+        // onPlay={() => {
+        //   if (!viewingAreaController.isPlaying) {
+        //     viewingAreaController.isPlaying = true;
+        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+        //   }
+        // }}
+        // onPause={() => {
+        //   if (viewingAreaController.isPlaying) {
+        //     // if(ViewingAreaController.host ==  coveyTownController.ourPlayer.id)
+        //     viewingAreaController.isPlaying = false;
+        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+        //   }
+        // }}
+        // onEnded={() => {
+        //   if (viewingAreaController.isPlaying) {
+        //     viewingAreaController.isPlaying = false;
+        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
+        //   }
+        // }}
       />
     </Box>
   );

@@ -30,7 +30,7 @@ import PlayerController from './PlayerController';
 import ViewingAreaController from './ViewingAreaController';
 import PosterSessionAreaController from './PosterSessionAreaController';
 import WatchTogetherAreaController from './WatchTogetherAreaController';
-import WatchTogetherArea from '../components/Town/interactables/WatchTogether';
+import WatchTogetherArea from '../components/Town/interactables/WatchTogetherArea';
 
 const CALCULATE_NEARBY_PLAYERS_DELAY = 300;
 

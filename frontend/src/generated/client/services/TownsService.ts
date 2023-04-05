@@ -8,10 +8,10 @@ import type { TownCreateParams } from '../models/TownCreateParams';
 import type { TownCreateResponse } from '../models/TownCreateResponse';
 import type { TownSettingsUpdate } from '../models/TownSettingsUpdate';
 import type { ViewingArea } from '../models/ViewingArea';
+import type { WatchTogetherArea } from '../models/WatchTogetherArea';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
-import { WatchTogetherArea } from '../models/WatchTogetherArea';
 
 export class TownsService {
 
@@ -36,8 +36,8 @@ export class TownsService {
      * @throws ApiError
      */
     public createTown(
-requestBody: TownCreateParams,
-): CancelablePromise<TownCreateResponse> {
+        requestBody: TownCreateParams,
+    ): CancelablePromise<TownCreateResponse> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/towns',
@@ -51,14 +51,14 @@ requestBody: TownCreateParams,
      * @param townId town to update
      * @param xCoveyTownPassword town update password, must match the password returned by createTown
      * @param requestBody The updated settings
-     * @returns void 
+     * @returns void
      * @throws ApiError
      */
     public updateTown(
-townId: string,
-xCoveyTownPassword: string,
-requestBody: TownSettingsUpdate,
-): CancelablePromise<void> {
+        townId: string,
+        xCoveyTownPassword: string,
+        requestBody: TownSettingsUpdate,
+    ): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'PATCH',
             url: '/towns/{townID}',
@@ -80,13 +80,13 @@ requestBody: TownSettingsUpdate,
      * Deletes a town
      * @param townId ID of the town to delete
      * @param xCoveyTownPassword town update password, must match the password returned by createTown
-     * @returns void 
+     * @returns void
      * @throws ApiError
      */
     public deleteTown(
-townId: string,
-xCoveyTownPassword: string,
-): CancelablePromise<void> {
+        townId: string,
+        xCoveyTownPassword: string,
+    ): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/towns/{townID}',
@@ -107,14 +107,14 @@ xCoveyTownPassword: string,
      * @param townId ID of the town in which to create the new conversation area
      * @param xSessionToken session token of the player making the request, must match the session token returned when the player joined the town
      * @param requestBody The new conversation area to create
-     * @returns void 
+     * @returns void
      * @throws ApiError
      */
     public createConversationArea(
-townId: string,
-xSessionToken: string,
-requestBody: ConversationArea,
-): CancelablePromise<void> {
+        townId: string,
+        xSessionToken: string,
+        requestBody: ConversationArea,
+    ): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/towns/{townID}/conversationArea',
@@ -136,16 +136,16 @@ requestBody: ConversationArea,
      * Creates a viewing area in a given town
      * @param townId ID of the town in which to create the new viewing area
      * @param xSessionToken session token of the player making the request, must
- * match the session token returned when the player joined the town
+     * match the session token returned when the player joined the town
      * @param requestBody The new viewing area to create
-     * @returns void 
+     * @returns void
      * @throws ApiError
      */
     public createViewingArea(
-townId: string,
-xSessionToken: string,
-requestBody: ViewingArea,
-): CancelablePromise<void> {
+        townId: string,
+        xSessionToken: string,
+        requestBody: ViewingArea,
+    ): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/towns/{townID}/viewingArea',
@@ -167,16 +167,16 @@ requestBody: ViewingArea,
      * Creates a poster session area in a given town
      * @param townId ID of the town in which to create the new poster session area
      * @param xSessionToken session token of the player making the request, must
- * match the session token returned when the player joined the town
+     * match the session token returned when the player joined the town
      * @param requestBody The new poster session area to create
-     * @returns void 
+     * @returns void
      * @throws ApiError
      */
     public createPosterSessionArea(
-townId: string,
-xSessionToken: string,
-requestBody: PosterSessionArea,
-): CancelablePromise<void> {
+        townId: string,
+        xSessionToken: string,
+        requestBody: PosterSessionArea,
+    ): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/towns/{townID}/posterSessionArea',
@@ -194,42 +194,20 @@ requestBody: PosterSessionArea,
         });
     }
 
-    public createWatchTogetherArea(
-        townId: string,
-        xSessionToken: string,
-        requestBody: WatchTogetherArea,
-        ): CancelablePromise<void> {
-                return this.httpRequest.request({
-                    method: 'POST',
-                    url: '/towns/{townID}/watchTogetherArea',
-                    path: {
-                        'townID': townId,
-                    },
-                    headers: {
-                        'X-Session-Token': xSessionToken,
-                    },
-                    body: requestBody,
-                    mediaType: 'application/json',
-                    errors: {
-                        400: `Invalid values specified`,
-                    },
-                });
-            }
-
     /**
      * Gets the image contents of a given poster session area in a given town
      * @param townId ID of the town in which to get the poster session area image contents
      * @param posterSessionId interactable ID of the poster session
      * @param xSessionToken session token of the player making the request, must
- * match the session token returned when the player joined the town
+     * match the session token returned when the player joined the town
      * @returns string Ok
      * @throws ApiError
      */
     public getPosterAreaImageContents(
-townId: string,
-posterSessionId: string,
-xSessionToken: string,
-): CancelablePromise<string> {
+        townId: string,
+        posterSessionId: string,
+        xSessionToken: string,
+    ): CancelablePromise<string> {
         return this.httpRequest.request({
             method: 'PATCH',
             url: '/towns/{townID}/{posterSessionId}/imageContents',
@@ -248,19 +226,19 @@ xSessionToken: string,
 
     /**
      * Increment the stars of a given poster session area in a given town, as long as there is
- * a poster image. Returns the new number of stars.
+     * a poster image. Returns the new number of stars.
      * @param townId ID of the town in which to get the poster session area image contents
      * @param posterSessionId interactable ID of the poster session
      * @param xSessionToken session token of the player making the request, must
- * match the session token returned when the player joined the town
+     * match the session token returned when the player joined the town
      * @returns number Ok
      * @throws ApiError
      */
     public incrementPosterAreaStars(
-townId: string,
-posterSessionId: string,
-xSessionToken: string,
-): CancelablePromise<number> {
+        townId: string,
+        posterSessionId: string,
+        xSessionToken: string,
+    ): CancelablePromise<number> {
         return this.httpRequest.request({
             method: 'PATCH',
             url: '/towns/{townID}/{posterSessionId}/incStars',
@@ -271,6 +249,37 @@ xSessionToken: string,
             headers: {
                 'X-Session-Token': xSessionToken,
             },
+            errors: {
+                400: `Invalid values specified`,
+            },
+        });
+    }
+
+    /**
+     * Creates a watch together area in a given town
+     * @param townId ID of the town in which to create the new watch together area
+     * @param xSessionToken session token of the player making the request, must
+     * match the session token returned when the player joined the town
+     * @param requestBody The new watch together area to create
+     * @returns void
+     * @throws ApiError
+     */
+    public createWatchTogetherArea(
+        townId: string,
+        xSessionToken: string,
+        requestBody: WatchTogetherArea,
+    ): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/towns/{townID}/watchTogetherArea',
+            path: {
+                'townID': townId,
+            },
+            headers: {
+                'X-Session-Token': xSessionToken,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 400: `Invalid values specified`,
             },

@@ -1,8 +1,8 @@
 import { ListItem, Image, List } from '@chakra-ui/react';
 import React from 'react';
-import { TempVideo } from '../../../../types/CoveyTownSocket';
+import { Video } from '../../../../types/CoveyTownSocket';
 
-export default function Playlist({ playlist }: { playlist: Array<TempVideo> }): JSX.Element {
+export default function Playlist({ playlist }: { playlist: Array<Video> }): JSX.Element {
   return (
     <>
       <List spacing={3}>
@@ -10,9 +10,9 @@ export default function Playlist({ playlist }: { playlist: Array<TempVideo> }): 
           // <div key={video.call} className='station'>
           //   {station.call}
           // </div>
-          <ListItem p='4' key={video.videoID}>
-            <Image sizes='full' objectFit='contain' src={video.videoThumbnail} />
-            {video.videoTitle}
+          <ListItem p='4' key={video.url}>
+            <Image sizes='full' objectFit='contain' src={video.thumbnail} />
+            {video.title}
           </ListItem>
         ))}
       </List>

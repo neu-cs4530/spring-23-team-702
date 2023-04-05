@@ -380,8 +380,9 @@ export default class Town {
     const area = this._interactables.find(
       eachArea => eachArea.id === watchTogetherArea.id,
     ) as WatchTogetherArea;
+    console.log(this._interactables);
     // if the exisiting area is already occupied or the new area doesn't have a host.
-    if (!area || area.hostID || !watchTogetherArea.hostID) {
+    if (!area) {
       return false;
     }
     area.updateModel(watchTogetherArea);
@@ -470,6 +471,7 @@ export default class Town {
     this._interactables = this._interactables
       .concat(viewingAreas)
       .concat(conversationAreas)
+      .concat(watchTogetherAreas)
       .concat(posterSessionAreas);
     this._validateInteractables();
   }

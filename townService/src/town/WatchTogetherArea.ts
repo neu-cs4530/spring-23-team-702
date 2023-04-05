@@ -94,7 +94,7 @@ export default class WatchTogetherArea extends InteractableArea {
   public static fromMapObject(
     mapObject: ITiledMapObject,
     townEmitter: TownEmitter,
-  ): WatchTogetherAreaModel {
+  ): WatchTogetherArea {
     const { name, width, height } = mapObject;
     if (!width || !height) {
       throw new Error(`Malformed watch together area ${name}`);

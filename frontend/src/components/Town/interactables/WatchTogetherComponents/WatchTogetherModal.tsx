@@ -9,19 +9,21 @@ import {
   ModalHeader,
   ModalOverlay,
   Center,
+  useToast,
 } from '@chakra-ui/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import useTownController from '../../../../hooks/useTownController';
 import ParticipantList from '../../../VideoCall/VideoFrontend/components/ParticipantList/ParticipantList';
 import WatchTogetherYoutubePlayer from './YoutubePlayer';
 import PlaylistDrawer from './PlaylistDrawer';
-import { TempVideo } from '../../../../types/CoveyTownSocket';
 import {
   useInteractable,
   useWatchTogetherAreaController,
 } from '../../../../classes/TownController';
 import WatchTogetherAreaInteractable from '../WatchTogetherArea';
+import { WatchTogetherArea, Video } from '../../../../types/CoveyTownSocket';
+import { useVideo, useHost, usePlayList } from '../../../../classes/WatchTogetherAreaController';
 
 export function WatchTogetherVideo({
   watchTogetherArea,
@@ -32,13 +34,55 @@ export function WatchTogetherVideo({
   const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
-  const [playList, setPlaylist] = useState<Array<TempVideo>>([]);
+  // we can directly passing the Video object here rather than seperating them
+  const video = useVideo(watchTogetherAreaController);
+  // the front end knows host from here
+  const hostID = useHost(watchTogetherAreaController);
+  //whether the current video is playing or not
+  const playList = usePlayList(watchTogetherAreaController);
 
-  const handlePlaylistUpdate = (newVideoPlaylist: TempVideo[]) => {
-    setPlaylist(newVideoPlaylist);
+  const handlePlaylistUpdate = (newVideoPlaylist: Video[]) => {
+    // TODO:
   };
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
+
+  const toast = useToast();
+
+  const createWatchTogetherArea = useCallback(async () => {
+    const request: WatchTogetherArea = {
+      id: watchTogetherAreaController.id,
+      hostID: coveyTownController.ourPlayer.id,
+      playList: [],
+    };
+    try {
+      await coveyTownController.createWatchTogetherArea(request);
+      toast({
+        title: 'Video set!',
+        status: 'success',
+      });
+      coveyTownController.unPause();
+    } catch (err) {
+      if (err instanceof Error) {
+        toast({
+          title: 'Unable to set video URL',
+          description: err.toString(),
+          status: 'error',
+        });
+      } else {
+        console.trace(err);
+        toast({
+          title: 'Unexpected Error',
+          status: 'error',
+        });
+      }
+    }
+  }, [coveyTownController, toast]);
+
+  if (hostID === undefined && watchTogetherAreaController) {
+    console.log('found someone');
+    createWatchTogetherArea();
+  }
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -117,7 +161,6 @@ export function WatchTogetherVideo({
  */
 export default function WatcherTogetherAreaWrapper(): JSX.Element {
   const watchTogetherArea = useInteractable<WatchTogetherAreaInteractable>('watchTogetherArea');
-  console.log(watchTogetherArea);
   if (watchTogetherArea) {
     console.log('created a watch together area');
     return <WatchTogetherVideo watchTogetherArea={watchTogetherArea} />;

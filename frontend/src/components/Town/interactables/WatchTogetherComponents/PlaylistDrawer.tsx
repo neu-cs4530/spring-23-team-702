@@ -12,8 +12,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { TempVideo } from '../../../../types/CoveyTownSocket';
-import getVideoDetail from './YoutubeAPI';
+import { Video } from '../../../../types/CoveyTownSocket';
 import Playlist from './PlayistVisualization';
 
 export default function PlaylistDrawer({
@@ -24,8 +23,8 @@ export default function PlaylistDrawer({
 }: {
   drawerIsOpen: boolean;
   close: () => void;
-  playList: Array<TempVideo>;
-  handlePlaylistUpdate: (newVideoPlaylist: Array<TempVideo>) => void;
+  playList: Array<Video>;
+  handlePlaylistUpdate: (newVideoPlaylist: Array<Video>) => void;
 }): JSX.Element {
   const [inputVideoURL, setInputVideoURL] = useState<string>('');
 
@@ -36,18 +35,18 @@ export default function PlaylistDrawer({
 
   const handleYotubeVideoURL = async () => {
     // check if it starts with youtube.com/youtu.be and has video id after v= with 11 digits id.
-    if (!isInValidYoutubeURL && !(playList.filter(e => e.videoID === inputVideoURL).length > 0)) {
+    if (!isInValidYoutubeURL && !(playList.filter(e => e.url === inputVideoURL).length > 0)) {
       // if matches, update the video playlist
-      const newPlaylist = [...playList];
-      const apiResponse = await getVideoDetail(inputVideoURL);
-      const playlistItem: TempVideo = {
-        videoID: inputVideoURL,
-        videoThumbnail: apiResponse.thumbnails,
-        videoTitle: apiResponse.title,
-      };
-      newPlaylist.push(playlistItem);
-      handlePlaylistUpdate(newPlaylist);
-      setInputVideoURL('');
+      // const newPlaylist = [...playList];
+      // const apiResponse = await getVideoDetail(inputVideoURL);
+      // const playlistItem: Video = {
+      //   url: inputVideoURL,
+      //   thumbnail: apiResponse.thumbnails,
+      //   title: apiResponse.title,
+      // };
+      // newPlaylist.push(playlistItem);
+      // handlePlaylistUpdate(newPlaylist);
+      // setInputVideoURL('');
     }
   };
 

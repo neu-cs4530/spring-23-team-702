@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import TownController from '../../../../classes/TownController';
 import useTownController from '../../../../hooks/useTownController';
-import { TempVideo } from '../../../../types/CoveyTownSocket';
+import { TempVideo, Video } from '../../../../types/CoveyTownSocket';
 import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 
 export default function WatchTogetherModal({
@@ -15,14 +15,14 @@ export default function WatchTogetherModal({
   watchTogetherAreaController: WatchTogetherAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
   coveyTownController: TownController;
-  videoPlaylist: Array<TempVideo>;
+  videoPlaylist: Array<Video>;
 }): JSX.Element {
   console.log(useTownController().ourPlayer.id);
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
 
   useEffect(() => {
     if (videoPlaylist.length != 0) {
-      setCurrentPlayingVideo(videoPlaylist[0].videoID);
+      setCurrentPlayingVideo(videoPlaylist[0].url);
     } else {
       setCurrentPlayingVideo('');
     }

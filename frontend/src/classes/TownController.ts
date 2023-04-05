@@ -583,7 +583,6 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * @param newArea
    */
   async createWatchTogetherArea(newArea: WatchTogetherAreaModel) {
-    console.warn('Intermediate watch together area: ' + JSON.stringify(newArea, null, 4));
     await this._townsService.createWatchTogetherArea(this.townID, this.sessionToken, newArea);
   }
 

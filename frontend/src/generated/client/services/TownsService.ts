@@ -13,6 +13,7 @@ import type { WatchTogetherArea } from '../models/WatchTogetherArea';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 import { Video } from '../models/Video';
+import { url } from 'inspector';
 
 export class TownsService {
 
@@ -299,18 +300,22 @@ export class TownsService {
         public fetchVideoInfo(
             townId: string,
             xSessionToken: string,
-            requestBody: WatchTogetherArea,
+            watchTogetherArea: WatchTogetherArea,
+            url: string,
         ): CancelablePromise<Video> {
             return this.httpRequest.request({
                 method: 'POST',
-                url: '/towns/{townID}/watchTogetherId/addVideotoPlaylist',
+                url: '/towns/{townID}/{watchTogetherId}/addVideotoPlaylist',
                 path: {
                     'townID': townId,
+                    'watchTogetherId':watchTogetherArea.id
                 },
                 headers: {
                     'X-Session-Token': xSessionToken,
                 },
-                body: requestBody,
+                body: {
+                    'url':url
+                },
                 mediaType: 'application/json',
                 errors: {
                     400: `Invalid values specified`,

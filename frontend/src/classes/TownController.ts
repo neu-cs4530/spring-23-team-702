@@ -779,8 +779,21 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     );
   }
 
-  public async fetchVideoInfo(watchTogetherArea: WatchTogetherAreaController): Promise<Video> {
-    return this._townsService.fetchVideoInfo(this.townID, this.sessionToken, watchTogetherArea);
+  /**
+   * Fetch the video given the watch together area model, the video will automaticly add to playlist and return here.
+   * @param watchTogetherArea the watch together area controller
+   * @returns a promise wrapping the video given the url.
+   */
+  public async fetchVideoInfo(
+    watchTogetherArea: WatchTogetherAreaController,
+    url: string,
+  ): Promise<Video> {
+    return this._townsService.fetchVideoInfo(
+      this.townID,
+      this.sessionToken,
+      watchTogetherArea,
+      url,
+    );
   }
 
   /**

@@ -16,12 +16,14 @@ import {
   ViewingArea as ViewingAreaModel,
   PosterSessionArea as PosterSessionAreaModel,
   WatchTogetherArea as WatchTogetherAreaModel,
+  Video,
 } from '../types/CoveyTownSocket';
 import ConversationArea from './ConversationArea';
 import InteractableArea from './InteractableArea';
 import ViewingArea from './ViewingArea';
 import PosterSessionArea from './PosterSessionArea';
 import WatchTogetherArea from './WatchTogetherArea';
+import getVideoDetail from '../api/YoutubeAPI';
 
 /**
  * The Town class implements the logic for each town: managing the various events that
@@ -390,20 +392,20 @@ export default class Town {
     return true;
   }
 
-  public addVideoToWatchTogetherPlaylist(url: string, watchTogetherId: string){
-    const watchTogetherArea = curTown.getInteractable(watchTogetherId);
-    if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
-      throw new InvalidParametersError('Invalid watch together ID');
-    }
-    if (!watchTogetherArea.hostID) {
-      throw new InvalidParametersError('Cant add video to watch together with no host');
-    }
-    const response = await getVideoDetail(requestBody.url);
+  public async addVideoToWatchTogetherPlaylist(
+    url: string,
+    watchTogetherArea: WatchTogetherAreaModel,
+    playerID: string,
+  ): Promise<Video> {
+    const area = this._interactables.find(
+      eachArea => eachArea.id === watchTogetherArea.id,
+    ) as WatchTogetherArea;
+    const response = await getVideoDetail(url);
     const newVideo: Video = {
       title: response.title,
-      url: requestBody.url,
+      url,
       thumbnail: response.thumbnails,
-      userID: curPlayer.id,
+      userID: playerID,
       pause: true,
       speed: 1.0,
       elapsedTimeSec: 0.0,
@@ -411,13 +413,13 @@ export default class Town {
     const updatePlayList = watchTogetherArea.playList;
     updatePlayList.push(newVideo);
     const updatedWatchTogetherArea = {
-      id: watchTogetherArea.id,
-      hostID: watchTogetherArea.hostID,
-      video: watchTogetherArea.video,
+      id: area.id,
+      hostID: area.hostID,
+      video: area.video,
       playList: updatePlayList,
     };
-    this._broadcastEmitter.emit('interactableUpdate', updatedWatchTogetherArea.toModel());
-    (<WatchTogetherAreaModel>watchTogetherArea).updateModel(updatedWatchTogetherArea);
+    area.updateModel(updatedWatchTogetherArea);
+    this._broadcastEmitter.emit('interactableUpdate', area.toModel());
     return newVideo;
   }
 

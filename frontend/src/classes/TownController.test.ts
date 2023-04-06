@@ -496,7 +496,6 @@ describe('TownController', () => {
             title: 'Test',
             thumbnail: 'test',
             url: 'test url',
-            durationSec: 114514,
             userID: nanoid(),
             pause: false,
             speed: 1,

@@ -24,4 +24,3 @@ export type Town = {
      */
     maximumOccupancy: number;
 };
-

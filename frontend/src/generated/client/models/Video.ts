@@ -11,4 +11,3 @@ export type Video = {
     thumbnail: string;
     title: string;
 };
-

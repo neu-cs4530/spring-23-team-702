@@ -788,11 +788,11 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     watchTogetherArea: WatchTogetherAreaController,
     url: string,
   ): Promise<Video> {
-    return this._townsService.fetchVideoInfo(
+    return this._townsService.pushWatchTogetherPlayList(
       this.townID,
+      watchTogetherArea.id,
       this.sessionToken,
-      watchTogetherArea,
-      url,
+      { url: url },
     );
   }
 

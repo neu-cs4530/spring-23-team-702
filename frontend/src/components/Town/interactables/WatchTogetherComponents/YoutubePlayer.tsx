@@ -18,7 +18,6 @@ export default function WatchTogetherModal({
   coveyTownController: TownController;
   videoPlaylist: Array<Video>;
 }): JSX.Element {
-  console.log(useTownController().ourPlayer.id);
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
 
   useEffect(() => {

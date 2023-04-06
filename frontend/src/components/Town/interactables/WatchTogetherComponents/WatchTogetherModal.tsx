@@ -81,7 +81,6 @@ export function WatchTogetherVideo({
   }, [coveyTownController, toast, watchTogetherAreaController.id]);
 
   if (hostID === undefined && watchTogetherAreaController) {
-    console.log('found someone');
     createWatchTogetherArea();
   }
 
@@ -163,7 +162,6 @@ export function WatchTogetherVideo({
 export default function WatcherTogetherAreaWrapper(): JSX.Element {
   const watchTogetherArea = useInteractable<WatchTogetherAreaInteractable>('watchTogetherArea');
   if (watchTogetherArea) {
-    console.log('created a watch together area');
     return <WatchTogetherVideo watchTogetherArea={watchTogetherArea} />;
   }
   return <></>;

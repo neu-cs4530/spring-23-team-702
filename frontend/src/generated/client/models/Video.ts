@@ -7,7 +7,6 @@ export type Video = {
     speed: number;
     pause: boolean;
     userID: string;
-    durationSec: number;
     url: string;
     thumbnail: string;
     title: string;

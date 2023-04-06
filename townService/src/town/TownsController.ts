@@ -405,64 +405,63 @@ export class TownsController extends Controller {
   //   return watchTogetherArea.playList;
   // }
 
-  // /**
-  //  * Push new video to the playList of the given watch together area, as long as the
-  //  * hostID is not undefined.
-  //  *
-  //  * @param townID ID of the town in which to push watch together area playList
-  //  * @param posterSessionId interactable ID of the watch together
-  //  * @param sessionToken session token of the player making the request, must
-  //  *        match the session token returned when the player joined the town
-  //  *
-  //  * @throws InvalidParametersError if the session token is not valid, or if the
-  //  *          poster session specified does not exist, or if the poster session specified
-  //  *          does not have an image
-  //  */
-  // @Post('{townID}/{watchTogetherId}/watchTogetherArea') // Fixing
-  // @Response<InvalidParametersError>(400, 'Invalid values specified')
-  // public async pushWatchTogetherPlayList(
-  //   @Path() townID: string,
-  //   @Path() watchTogetherId: string,
-  //   @Header('X-Session-Token') sessionToken: string,
-  //   @Body() requestBody: { url: string },
-  // ): Promise<Video> {
-  //   const curTown = this._townsStore.getTownByID(townID);
-  //   if (!curTown) {
-  //     throw new InvalidParametersError('Invalid town ID');
-  //   }
-  //   const curPlayer = curTown.getPlayerBySessionToken(sessionToken);
-  //   if (!curPlayer) {
-  //     throw new InvalidParametersError('Invalid session ID');
-  //   }
-  //   const watchTogetherArea = curTown.getInteractable(watchTogetherId);
-  //   if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
-  //     throw new InvalidParametersError('Invalid watch together ID');
-  //   }
-  //   if (!watchTogetherArea.hostID) {
-  //     throw new InvalidParametersError('Cant add video to watch together with no host');
-  //   }
-  //   const response = await getVideoDetail(requestBody.url);
-  //   const newVideo: Video = {
-  //     title: response.title,
-  //     url: requestBody.url,
-  //     thumbnail: response.thumbnails,
-  //     durationSec: requestBody.durationSec,
-  //     userID: curPlayer.id,
-  //     pause: true,
-  //     speed: 1.0,
-  //     elapsedTimeSec: 0.0,
-  //   };
-  //   const updatePlayList = watchTogetherArea.playList;
-  //   updatePlayList.push(newVideo);
-  //   const updatedWatchTogetherArea = {
-  //     id: watchTogetherArea.id,
-  //     hostID: watchTogetherArea.hostID,
-  //     video: watchTogetherArea.video,
-  //     playList: updatePlayList,
-  //   };
-  //   (<WatchTogetherAreaModel>watchTogetherArea).updateModel(updatedWatchTogetherArea);
-  //   return newVideo;
-  // }
+  /**
+   * Push new video to the playList of the given watch together area, as long as the
+   * hostID is not undefined.
+   *
+   * @param townID ID of the town in which to push watch together area playList
+   * @param posterSessionId interactable ID of the watch together
+   * @param sessionToken session token of the player making the request, must
+   *        match the session token returned when the player joined the town
+   *
+   * @throws InvalidParametersError if the session token is not valid, or if the
+   *          poster session specified does not exist, or if the poster session specified
+   *          does not have an image
+   */
+  @Post('{townID}/{watchTogetherId}/addVideotoPlaylist') // Fixing
+  @Response<InvalidParametersError>(400, 'Invalid values specified')
+  public async pushWatchTogetherPlayList(
+    @Path() townID: string,
+    @Path() watchTogetherId: string,
+    @Header('X-Session-Token') sessionToken: string,
+    @Body() requestBody: { url: string },
+  ): Promise<Video> {
+    const curTown = this._townsStore.getTownByID(townID);
+    if (!curTown) {
+      throw new InvalidParametersError('Invalid town ID');
+    }
+    const curPlayer = curTown.getPlayerBySessionToken(sessionToken);
+    if (!curPlayer) {
+      throw new InvalidParametersError('Invalid session ID');
+    }
+    const watchTogetherArea = curTown.getInteractable(watchTogetherId);
+    if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
+      throw new InvalidParametersError('Invalid watch together ID');
+    }
+    if (!watchTogetherArea.hostID) {
+      throw new InvalidParametersError('Cant add video to watch together with no host');
+    }
+    const response = await getVideoDetail(requestBody.url);
+    const newVideo: Video = {
+      title: response.title,
+      url: requestBody.url,
+      thumbnail: response.thumbnails,
+      userID: curPlayer.id,
+      pause: true,
+      speed: 1.0,
+      elapsedTimeSec: 0.0,
+    };
+    const updatePlayList = watchTogetherArea.playList;
+    updatePlayList.push(newVideo);
+    const updatedWatchTogetherArea = {
+      id: watchTogetherArea.id,
+      hostID: watchTogetherArea.hostID,
+      video: watchTogetherArea.video,
+      playList: updatePlayList,
+    };
+    (<WatchTogetherAreaModel>watchTogetherArea).updateModel(updatedWatchTogetherArea);
+    return newVideo;
+  }
 
   // /**
   //  * Play the next video in a given watch together area in a given town

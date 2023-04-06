@@ -390,6 +390,37 @@ export default class Town {
     return true;
   }
 
+  public addVideoToWatchTogetherPlaylist(url: string, watchTogetherId: string){
+    const watchTogetherArea = curTown.getInteractable(watchTogetherId);
+    if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
+      throw new InvalidParametersError('Invalid watch together ID');
+    }
+    if (!watchTogetherArea.hostID) {
+      throw new InvalidParametersError('Cant add video to watch together with no host');
+    }
+    const response = await getVideoDetail(requestBody.url);
+    const newVideo: Video = {
+      title: response.title,
+      url: requestBody.url,
+      thumbnail: response.thumbnails,
+      userID: curPlayer.id,
+      pause: true,
+      speed: 1.0,
+      elapsedTimeSec: 0.0,
+    };
+    const updatePlayList = watchTogetherArea.playList;
+    updatePlayList.push(newVideo);
+    const updatedWatchTogetherArea = {
+      id: watchTogetherArea.id,
+      hostID: watchTogetherArea.hostID,
+      video: watchTogetherArea.video,
+      playList: updatePlayList,
+    };
+    this._broadcastEmitter.emit('interactableUpdate', updatedWatchTogetherArea.toModel());
+    (<WatchTogetherAreaModel>watchTogetherArea).updateModel(updatedWatchTogetherArea);
+    return newVideo;
+  }
+
   /**
    * Fetch a player's session based on the provided session token. Returns undefined if the
    * session token is not valid.

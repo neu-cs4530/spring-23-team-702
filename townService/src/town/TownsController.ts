@@ -434,33 +434,11 @@ export class TownsController extends Controller {
     if (!curPlayer) {
       throw new InvalidParametersError('Invalid session ID');
     }
-    const watchTogetherArea = curTown.getInteractable(watchTogetherId);
-    if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
-      throw new InvalidParametersError('Invalid watch together ID');
+    const video = curTown.addVideoToWatchTogetherPlaylist(requestBody.url, watchTogetherId)
+    if (!video) {
+      throw new InvalidParametersError('Invalid watch together area');
     }
-    if (!watchTogetherArea.hostID) {
-      throw new InvalidParametersError('Cant add video to watch together with no host');
-    }
-    const response = await getVideoDetail(requestBody.url);
-    const newVideo: Video = {
-      title: response.title,
-      url: requestBody.url,
-      thumbnail: response.thumbnails,
-      userID: curPlayer.id,
-      pause: true,
-      speed: 1.0,
-      elapsedTimeSec: 0.0,
-    };
-    const updatePlayList = watchTogetherArea.playList;
-    updatePlayList.push(newVideo);
-    const updatedWatchTogetherArea = {
-      id: watchTogetherArea.id,
-      hostID: watchTogetherArea.hostID,
-      video: watchTogetherArea.video,
-      playList: updatePlayList,
-    };
-    (<WatchTogetherAreaModel>watchTogetherArea).updateModel(updatedWatchTogetherArea);
-    return newVideo;
+    return video;
   }
 
   // /**

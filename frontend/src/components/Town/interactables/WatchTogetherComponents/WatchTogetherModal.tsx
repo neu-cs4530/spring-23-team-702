@@ -51,6 +51,7 @@ export function WatchTogetherVideo({
           (watchTogetherAreaController.playList =
             watchTogetherAreaController.playList.concat(newVideo)),
       );
+    coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
   };
 
   const reactPlayerRef = useRef<ReactPlayer>(null);

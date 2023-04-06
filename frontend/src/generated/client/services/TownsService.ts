@@ -12,6 +12,7 @@ import type { WatchTogetherArea } from '../models/WatchTogetherArea';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+import { Video } from '../models/Video';
 
 export class TownsService {
 
@@ -285,5 +286,36 @@ export class TownsService {
             },
         });
     }
+
+    /**
+     * Fetch the information of the new video and add it to the playlist
+     * @param townId ID of the town in which to create the new watch together area
+     * @param xSessionToken session token of the player making the request, must
+     * match the session token returned when the player joined the town
+     * @param requestBody The new watch together area to create
+     * @returns void
+     * @throws ApiError
+     */
+        public fetchVideoInfo(
+            townId: string,
+            xSessionToken: string,
+            requestBody: WatchTogetherArea,
+        ): CancelablePromise<Video> {
+            return this.httpRequest.request({
+                method: 'POST',
+                url: '/towns/{townID}/watchTogetherId/addVideotoPlaylist',
+                path: {
+                    'townID': townId,
+                },
+                headers: {
+                    'X-Session-Token': xSessionToken,
+                },
+                body: requestBody,
+                mediaType: 'application/json',
+                errors: {
+                    400: `Invalid values specified`,
+                },
+            });
+        }
 
 }

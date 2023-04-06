@@ -88,7 +88,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Video": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"elapsedTimeSec":{"dataType":"double","required":true},"speed":{"dataType":"double","required":true},"pause":{"dataType":"boolean","required":true},"userID":{"dataType":"string","required":true},"durationSec":{"dataType":"double","required":true},"url":{"dataType":"string","required":true},"thumbnail":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"elapsedTimeSec":{"dataType":"double","required":true},"speed":{"dataType":"double","required":true},"pause":{"dataType":"boolean","required":true},"userID":{"dataType":"string","required":true},"url":{"dataType":"string","required":true},"thumbnail":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "WatchTogetherArea": {

@@ -188,10 +188,6 @@
 					"userID": {
 						"type": "string"
 					},
-					"durationSec": {
-						"type": "number",
-						"format": "double"
-					},
 					"url": {
 						"type": "string"
 					},
@@ -207,7 +203,6 @@
 					"speed",
 					"pause",
 					"userID",
-					"durationSec",
 					"url",
 					"thumbnail",
 					"title"
@@ -517,7 +512,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -574,7 +569,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -647,7 +642,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -684,7 +679,7 @@
 						}
 					}
 				},
-				"description": "Increment the stars of a given poster session area in a given town, as long as there is\na poster image. Returns the new number of stars.",
+				"description": "Increment the stars of a given poster session area in a given town, as long as there is\r\na poster image. Returns the new number of stars.",
 				"tags": [
 					"towns"
 				],
@@ -709,7 +704,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -754,7 +749,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,
@@ -802,7 +797,7 @@
 						}
 					}
 				},
-				"description": "Push new video to the playList of the given watch together area, as long as the\nhostID is not undefined.",
+				"description": "Push new video to the playList of the given watch together area, as long as the\r\nhostID is not undefined.",
 				"tags": [
 					"towns"
 				],
@@ -826,7 +821,7 @@
 						}
 					},
 					{
-						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"description": "session token of the player making the request, must\r\nmatch the session token returned when the player joined the town",
 						"in": "header",
 						"name": "X-Session-Token",
 						"required": true,

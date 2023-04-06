@@ -15,7 +15,6 @@ function getVideoID(videoURL: string): string {
 export default async function getVideoDetail(videoURL: string): Promise<{
   thumbnails: string;
   title: string;
-  durationSec: string;
 }> {
   const apiKey = process.env.YOUTUBE_API_KEY;
   assert(apiKey);
@@ -36,6 +35,5 @@ export default async function getVideoDetail(videoURL: string): Promise<{
   return {
     thumbnails: snippet.thumbnails.high.url,
     title: snippet.title,
-    durationSec: snippet.contentDetails.duration,
   };
 }

@@ -10,3 +10,4 @@ export type WatchTogetherArea = {
     video?: Video;
     playList: Array<Video>;
 };
+

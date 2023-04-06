@@ -12,6 +12,8 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import TownController from '../../../../classes/TownController';
+import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 import { Video } from '../../../../types/CoveyTownSocket';
 import Playlist from './PlayistVisualization';
 
@@ -20,11 +22,15 @@ export default function PlaylistDrawer({
   close,
   playList,
   handlePlaylistUpdate,
+  townController,
+  watchTogetherAreaController,
 }: {
   drawerIsOpen: boolean;
   close: () => void;
   playList: Array<Video>;
-  handlePlaylistUpdate: (newVideoPlaylist: Array<Video>) => void;
+  handlePlaylistUpdate: (videoURL: string) => void;
+  townController: TownController;
+  watchTogetherAreaController: WatchTogetherAreaController;
 }): JSX.Element {
   const [inputVideoURL, setInputVideoURL] = useState<string>('');
 
@@ -37,18 +43,11 @@ export default function PlaylistDrawer({
     // check if it starts with youtube.com/youtu.be and has video id after v= with 11 digits id.
     if (!isInValidYoutubeURL && !(playList.filter(e => e.url === inputVideoURL).length > 0)) {
       // if matches, update the video playlist
-      // const newPlaylist = [...playList];
-      // const apiResponse = await getVideoDetail(inputVideoURL);
-      // const playlistItem: Video = {
-      //   url: inputVideoURL,
-      //   thumbnail: apiResponse.thumbnails,
-      //   title: apiResponse.title,
-      // };
-      // newPlaylist.push(playlistItem);
-      // handlePlaylistUpdate(newPlaylist);
-      // setInputVideoURL('');
+      handlePlaylistUpdate(inputVideoURL);
     }
   };
+
+  console.log(watchTogetherAreaController.playList);
 
   return (
     <Drawer
@@ -87,10 +86,10 @@ export default function PlaylistDrawer({
           <Button
             colorScheme='teal'
             onClick={() => {
-              const newPlaylist = [...playList];
-              newPlaylist.shift();
-              handlePlaylistUpdate(newPlaylist);
-              console.log(newPlaylist);
+              // const newPlaylist = [...playList];
+              // newPlaylist.shift();
+              // handlePlaylistUpdate(newPlaylist);
+              // console.log(newPlaylist);
             }}
             inlineSize={'full'}>
             Next video

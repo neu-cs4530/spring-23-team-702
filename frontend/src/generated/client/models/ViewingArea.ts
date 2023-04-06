@@ -8,3 +8,4 @@ export type ViewingArea = {
     isPlaying: boolean;
     elapsedTimeSec: number;
 };
+

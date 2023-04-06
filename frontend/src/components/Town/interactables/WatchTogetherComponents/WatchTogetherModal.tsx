@@ -39,11 +39,18 @@ export function WatchTogetherVideo({
   const video = useVideo(watchTogetherAreaController);
   // the front end knows host from here
   const hostID = useHost(watchTogetherAreaController);
-  //whether the current video is playing or not
+  // whether the current video is playing or not
   const playList = usePlayList(watchTogetherAreaController);
 
-  const handlePlaylistUpdate = (newVideoPlaylist: Video[]) => {
+  const handlePlaylistUpdate = (videoURL: string) => {
     // TODO:
+    coveyTownController
+      .fetchVideoInfo(watchTogetherAreaController, videoURL)
+      .then(
+        newVideo =>
+          (watchTogetherAreaController.playList =
+            watchTogetherAreaController.playList.concat(newVideo)),
+      );
   };
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
@@ -140,6 +147,8 @@ export function WatchTogetherVideo({
                 }}
                 playList={playList}
                 handlePlaylistUpdate={handlePlaylistUpdate}
+                townController={coveyTownController}
+                watchTogetherAreaController={watchTogetherAreaController}
               />
             </Box>
             {/*Video play box */}

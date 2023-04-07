@@ -423,6 +423,42 @@ export default class Town {
     return newVideo;
   }
 
+  public watchTogetherPlayNext(watchTogetherArea: WatchTogetherAreaModel): boolean {
+    const area = this._interactables.find(
+      eachArea => eachArea.id === watchTogetherArea.id,
+    ) as WatchTogetherArea;
+    if (area.playList.length === 0) {
+      return false;
+    }
+    const updatePlayList = watchTogetherArea.playList;
+    const newVideo = updatePlayList.shift();
+    const updatedWatchTogetherArea = {
+      id: watchTogetherArea.id,
+      hostID: watchTogetherArea.hostID,
+      video: newVideo,
+      playList: updatePlayList,
+    };
+    area.updateModel(updatedWatchTogetherArea);
+    this._broadcastEmitter.emit('interactableUpdate', area.toModel());
+    return true;
+  }
+
+  public watchTogetherHostID(watchTogetherArea: WatchTogetherAreaModel): string | undefined {
+    const area = this._interactables.find(
+      eachArea => eachArea.id === watchTogetherArea.id,
+    ) as WatchTogetherArea;
+    const updatedHostID = watchTogetherArea.hostID;
+    const updatedWatchTogetherArea = {
+      id: watchTogetherArea.id,
+      hostID: updatedHostID,
+      video: watchTogetherArea.video,
+      playList: watchTogetherArea.playList,
+    };
+    area.updateModel(updatedWatchTogetherArea);
+    this._broadcastEmitter.emit('interactableUpdate', area.toModel());
+    return updatedHostID;
+  }
+
   /**
    * Fetch a player's session based on the provided session token. Returns undefined if the
    * session token is not valid.

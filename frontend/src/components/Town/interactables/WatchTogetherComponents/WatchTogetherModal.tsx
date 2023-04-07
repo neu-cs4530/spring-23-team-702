@@ -33,7 +33,7 @@ export function WatchTogetherVideo({
 }): JSX.Element {
   const coveyTownController = useTownController();
   const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
 
   // we can directly passing the Video object here rather than seperating them
@@ -50,11 +50,7 @@ export function WatchTogetherVideo({
   };
 
   const handleNextVideo = () => {
-    const newPlaylist = [...watchTogetherAreaController.playList];
-    newPlaylist.shift();
-    watchTogetherAreaController.playList = newPlaylist;
-    console.log(watchTogetherAreaController.playList);
-    coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+    coveyTownController.watchTogetherPlayNext(watchTogetherAreaController);
   };
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
@@ -78,11 +74,8 @@ export function WatchTogetherVideo({
     };
     try {
       await coveyTownController.createWatchTogetherArea(request);
-      toast({
-        title: 'Video set!',
-        status: 'success',
-      });
       coveyTownController.unPause();
+      setModalIsOpen(true);
     } catch (err) {
       if (err instanceof Error) {
         toast({
@@ -101,7 +94,11 @@ export function WatchTogetherVideo({
   }, [coveyTownController, toast, watchTogetherAreaController.id]); // why there is dependencies here, might want to delete them
 
   if (hostID === undefined && watchTogetherAreaController) {
+    console.log('uiasdasd');
     createWatchTogetherArea();
+  } else if (!modalIsOpen) {
+    console.log('im here');
+    setModalIsOpen(true);
   }
 
   useEffect(() => {

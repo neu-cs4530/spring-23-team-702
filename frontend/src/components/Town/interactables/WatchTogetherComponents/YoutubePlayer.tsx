@@ -21,7 +21,7 @@ export default function WatchTogetherModal({
   isHost: boolean;
 }): JSX.Element {
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
-
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   useEffect(() => {
     if (videoPlaylist.length != 0) {
       setCurrentPlayingVideo(videoPlaylist[0].url);
@@ -30,16 +30,16 @@ export default function WatchTogetherModal({
     }
   }, [videoPlaylist]);
 
+  useEffect(() => {
+    if (watchTogetherAreaController.playList[0] === undefined) {
+      setIsPlaying(false);
+    } else {
+      setIsPlaying(watchTogetherAreaController.playList[0].pause);
+    }
+  }, [watchTogetherAreaController]);
+
   return (
     <Box flex='4' bg='white'>
-      <Button
-        colorScheme='teal'
-        onClick={() => {
-          console.log(isHost);
-        }}
-        inlineSize={'full'}>
-        Open Playlist
-      </Button>
       <ReactPlayer
         ref={reactPlayerRef}
         config={{
@@ -57,35 +57,36 @@ export default function WatchTogetherModal({
         height='100%'
         controls={isHost}
         url={currentPlayingVideo}
-        playing={true}
-        // onProgress={state => {
-        //   if (
-        //     state.playedSeconds != 0 &&
-        //     state.playedSeconds != viewingAreaController.elapsedTimeSec
-        //   ) {
-        //     viewingAreaController.elapsedTimeSec = state.playedSeconds;
-        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-        //   }
-        // }}
-        // onPlay={() => {
-        //   if (!viewingAreaController.isPlaying) {
-        //     viewingAreaController.isPlaying = true;
-        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-        //   }
-        // }}
-        // onPause={() => {
-        //   if (viewingAreaController.isPlaying) {
-        //     // if(ViewingAreaController.host ==  coveyTownController.ourPlayer.id)
-        //     viewingAreaController.isPlaying = false;
-        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-        //   }
-        // }}
-        // onEnded={() => {
-        //   if (viewingAreaController.isPlaying) {
-        //     viewingAreaController.isPlaying = false;
-        //     coveyTownController.emitViewingAreaUpdate(viewingAreaController);
-        //   }
-        // }}
+        playing={isPlaying}
+        onProgress={state => {
+          if (
+            state.playedSeconds != 0 &&
+            state.playedSeconds != watchTogetherAreaController.playList[0].elapsedTimeSec
+          ) {
+            watchTogetherAreaController.playList[0].elapsedTimeSec = state.playedSeconds;
+            coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+          }
+        }}
+        onPlay={() => {
+          if (!watchTogetherAreaController.playList[0].pause) {
+            watchTogetherAreaController.playList[0].pause = true;
+            coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+          }
+        }}
+        onPause={() => {
+          console.log('event trigger');
+          if (watchTogetherAreaController.playList[0].pause) {
+            // if(ViewingAreaController.host ==  coveyTownController.ourPlayer.id)
+            watchTogetherAreaController.playList[0].pause = false;
+            coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+          }
+        }}
+        onEnded={() => {
+          if (watchTogetherAreaController.playList[0].pause) {
+            watchTogetherAreaController.playList[0].pause = false;
+            coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+          }
+        }}
       />
     </Box>
   );

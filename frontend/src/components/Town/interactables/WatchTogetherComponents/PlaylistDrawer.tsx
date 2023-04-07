@@ -22,6 +22,7 @@ export default function PlaylistDrawer({
   close,
   playList,
   handlePlaylistUpdate,
+  handleNextVideo,
   townController,
   watchTogetherAreaController,
 }: {
@@ -31,6 +32,7 @@ export default function PlaylistDrawer({
   handlePlaylistUpdate: (videoURL: string) => void;
   townController: TownController;
   watchTogetherAreaController: WatchTogetherAreaController;
+  handleNextVideo: () => void;
 }): JSX.Element {
   const [inputVideoURL, setInputVideoURL] = useState<string>('');
 
@@ -46,8 +48,6 @@ export default function PlaylistDrawer({
       handlePlaylistUpdate(inputVideoURL);
     }
   };
-
-  console.log(watchTogetherAreaController.playList);
 
   return (
     <Drawer
@@ -90,6 +90,7 @@ export default function PlaylistDrawer({
               // newPlaylist.shift();
               // handlePlaylistUpdate(newPlaylist);
               // console.log(newPlaylist);
+              handleNextVideo();
             }}
             inlineSize={'full'}>
             Next video

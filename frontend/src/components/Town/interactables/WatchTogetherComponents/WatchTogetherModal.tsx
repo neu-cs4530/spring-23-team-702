@@ -35,28 +35,40 @@ export function WatchTogetherVideo({
   const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
+
   // we can directly passing the Video object here rather than seperating them
   const video = useVideo(watchTogetherAreaController);
   // the front end knows host from here
   const hostID = useHost(watchTogetherAreaController);
   // whether the current video is playing or not
   const playList = usePlayList(watchTogetherAreaController);
+  const [isHost, setIsHost] = useState<boolean>(hostID === coveyTownController.ourPlayer.id);
 
   const handlePlaylistUpdate = (videoURL: string) => {
-    // TODO:
-    coveyTownController
-      .fetchVideoInfo(watchTogetherAreaController, videoURL)
-      .then(
-        newVideo =>
-          (watchTogetherAreaController.playList =
-            watchTogetherAreaController.playList.concat(newVideo)),
-      );
+    coveyTownController.fetchVideoInfo(watchTogetherAreaController, videoURL);
+    coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+  };
+
+  const handleNextVideo = () => {
+    const newPlaylist = [...watchTogetherAreaController.playList];
+    newPlaylist.shift();
+    watchTogetherAreaController.playList = newPlaylist;
+    console.log(watchTogetherAreaController.playList);
     coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
   };
 
   const reactPlayerRef = useRef<ReactPlayer>(null);
 
   const toast = useToast();
+
+  useEffect(() => {
+    if (hostID === coveyTownController.ourPlayer.id) {
+      setIsHost(true);
+      //Is control able to update by reinitiating the reactPlayerRef?
+    } else {
+      setIsHost(false);
+    }
+  }, [coveyTownController.ourPlayer.id, hostID]);
 
   const createWatchTogetherArea = useCallback(async () => {
     const request: WatchTogetherArea = {
@@ -86,7 +98,7 @@ export function WatchTogetherVideo({
         });
       }
     }
-  }, [coveyTownController, toast, watchTogetherAreaController.id]);
+  }, [coveyTownController, toast, watchTogetherAreaController.id]); // why there is dependencies here, might want to delete them
 
   if (hostID === undefined && watchTogetherAreaController) {
     createWatchTogetherArea();
@@ -150,6 +162,7 @@ export function WatchTogetherVideo({
                 handlePlaylistUpdate={handlePlaylistUpdate}
                 townController={coveyTownController}
                 watchTogetherAreaController={watchTogetherAreaController}
+                handleNextVideo={handleNextVideo}
               />
             </Box>
             {/*Video play box */}
@@ -158,6 +171,7 @@ export function WatchTogetherVideo({
               reactPlayerRef={reactPlayerRef}
               coveyTownController={coveyTownController}
               videoPlaylist={playList}
+              isHost={isHost}
             />
           </Flex>
         </ModalBody>

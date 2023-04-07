@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import TownController from '../../../../classes/TownController';
@@ -12,11 +12,13 @@ export default function WatchTogetherModal({
   reactPlayerRef,
   coveyTownController,
   videoPlaylist,
+  isHost,
 }: {
   watchTogetherAreaController: WatchTogetherAreaController;
   reactPlayerRef: React.RefObject<ReactPlayer>;
   coveyTownController: TownController;
   videoPlaylist: Array<Video>;
+  isHost: boolean;
 }): JSX.Element {
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
 
@@ -30,6 +32,14 @@ export default function WatchTogetherModal({
 
   return (
     <Box flex='4' bg='white'>
+      <Button
+        colorScheme='teal'
+        onClick={() => {
+          console.log(isHost);
+        }}
+        inlineSize={'full'}>
+        Open Playlist
+      </Button>
       <ReactPlayer
         ref={reactPlayerRef}
         config={{
@@ -45,7 +55,7 @@ export default function WatchTogetherModal({
         p='4'
         width='100%'
         height='100%'
-        controls={true}
+        controls={isHost}
         url={currentPlayingVideo}
         playing={true}
         // onProgress={state => {

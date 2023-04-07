@@ -2,7 +2,8 @@ import { ListItem, Image, List } from '@chakra-ui/react';
 import React from 'react';
 import { Video } from '../../../../types/CoveyTownSocket';
 
-export default function Playlist({ playlist }: { playlist: Array<Video> }): JSX.Element {
+export default function Playlist({ playlist }: { playlist: Video[] }): JSX.Element {
+  console.log(playlist);
   return (
     <>
       <List spacing={3}>

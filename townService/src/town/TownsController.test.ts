@@ -2,7 +2,13 @@ import assert from 'assert';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { nanoid } from 'nanoid';
 import { Town } from '../api/Model';
-import { ConversationArea, Interactable, TownEmitter, ViewingArea } from '../types/CoveyTownSocket';
+import {
+  ConversationArea,
+  Interactable,
+  TownEmitter,
+  ViewingArea,
+  WatchTogetherArea,
+} from '../types/CoveyTownSocket';
 import TownsStore from '../lib/TownsStore';
 import {
   createConversationForTesting,
@@ -12,6 +18,7 @@ import {
   isViewingArea,
   isConversationArea,
   MockedPlayer,
+  isWatchTogetherArea,
 } from '../TestUtils';
 import { TownsController } from './TownsController';
 
@@ -353,6 +360,66 @@ describe('TownsController integration tests', () => {
         viewingArea.id = nanoid();
         await expect(
           controller.createViewingArea(testingTown.townID, sessionToken, viewingArea),
+        ).rejects.toThrow();
+      });
+    });
+    describe('[T1] Create Watch Together Area', () => {
+      it('Executes without error when creating a new watch together area', async () => {
+        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        if (!watchTogetherArea) {
+          fail('Expected at least one viewing area to be returned in the initial join data');
+        } else {
+          const neWatchTogetherArea: WatchTogetherArea = {
+            id: watchTogetherArea.id,
+            playList: watchTogetherArea.playList,
+            video: watchTogetherArea.video,
+            hostID: watchTogetherArea.hostID,
+          };
+          await controller.createWatchTogetherArea(
+            testingTown.townID,
+            sessionToken,
+            neWatchTogetherArea,
+          );
+          // Check to see that the viewing area was successfully updated
+          const townEmitter = getBroadcastEmitterForTownID(testingTown.townID);
+          const updateMessage = getLastEmittedEvent(townEmitter, 'interactableUpdate');
+          if (isWatchTogetherArea(updateMessage)) {
+            expect(updateMessage).toEqual(neWatchTogetherArea);
+          } else {
+            fail('Expected an interactableUpdate to be dispatched with the new viewing area');
+          }
+        }
+      });
+      it('Returns an error message if the town ID is invalid', async () => {
+        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        const neWatchTogetherArea: WatchTogetherArea = {
+          id: watchTogetherArea.id,
+          playList: watchTogetherArea.playList,
+          video: watchTogetherArea.video,
+          hostID: watchTogetherArea.hostID,
+        };
+        await expect(
+          controller.createWatchTogetherArea(nanoid(), sessionToken, neWatchTogetherArea),
+        ).rejects.toThrow();
+      });
+      it('Checks for a valid session token before creating a viewing area', async () => {
+        const invalidSessionToken = nanoid();
+        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        const neWatchTogetherArea: WatchTogetherArea = {
+          id: watchTogetherArea.id,
+          playList: watchTogetherArea.playList,
+          video: watchTogetherArea.video,
+          hostID: watchTogetherArea.hostID,
+        };
+        await expect(
+          controller.createWatchTogetherArea(nanoid(), invalidSessionToken, neWatchTogetherArea),
+        ).rejects.toThrow();
+      });
+      it('Returns an error message if addViewingArea returns false', async () => {
+        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        watchTogetherArea.id = nanoid();
+        await expect(
+          controller.createWatchTogetherArea(testingTown.townID, sessionToken, watchTogetherArea),
         ).rejects.toThrow();
       });
     });

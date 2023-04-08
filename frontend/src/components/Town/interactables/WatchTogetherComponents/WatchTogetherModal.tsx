@@ -33,7 +33,6 @@ export function WatchTogetherVideo({
 }): JSX.Element {
   const coveyTownController = useTownController();
   const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
 
   // we can directly passing the Video object here rather than seperating them
@@ -56,6 +55,10 @@ export function WatchTogetherVideo({
   const reactPlayerRef = useRef<ReactPlayer>(null);
 
   const toast = useToast();
+
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(
+    !(hostID === undefined && watchTogetherAreaController != undefined),
+  );
 
   useEffect(() => {
     if (hostID === coveyTownController.ourPlayer.id) {
@@ -96,9 +99,6 @@ export function WatchTogetherVideo({
   if (hostID === undefined && watchTogetherAreaController) {
     console.log('uiasdasd');
     createWatchTogetherArea();
-  } else if (!modalIsOpen) {
-    console.log('im here');
-    setModalIsOpen(true);
   }
 
   useEffect(() => {

@@ -156,8 +156,6 @@ export function WatchTogetherVideo({
                 }}
                 playList={playList}
                 handlePlaylistUpdate={handlePlaylistUpdate}
-                townController={coveyTownController}
-                watchTogetherAreaController={watchTogetherAreaController}
                 handleNextVideo={handleNextVideo}
               />
             </Box>

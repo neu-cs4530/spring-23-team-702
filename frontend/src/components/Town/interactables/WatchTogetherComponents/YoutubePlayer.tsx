@@ -7,6 +7,8 @@ import useTownController from '../../../../hooks/useTownController';
 import { Video } from '../../../../types/CoveyTownSocket';
 import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 
+const ALLOWED_DRIFT = 3;
+
 export default function WatchTogetherModal({
   watchTogetherAreaController,
   coveyTownController,
@@ -20,6 +22,7 @@ export default function WatchTogetherModal({
 }): JSX.Element {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
+  const [reactPlayer, setReactPlayer] = useState<ReactPlayer>();
 
   useEffect(() => {
     if (videoPlaylist.length != 0) {
@@ -30,14 +33,18 @@ export default function WatchTogetherModal({
   }, [setCurrentPlayingVideo, videoPlaylist]);
 
   useEffect(() => {
-    if (watchTogetherAreaController.playList[0] === undefined) {
-      setIsPlaying(false);
-    } else {
+    console.log('controller changed');
+    if (watchTogetherAreaController.playList[0] != undefined && reactPlayer != undefined) {
       setIsPlaying(watchTogetherAreaController.playList[0].pause);
+      const currentTime = reactPlayer.getCurrentTime();
+      const newTime = watchTogetherAreaController.playList[0].elapsedTimeSec;
+      if (currentTime !== undefined && Math.abs(currentTime - newTime) > ALLOWED_DRIFT) {
+        reactPlayer.seekTo(newTime, 'seconds');
+      }
+    } else {
+      setIsPlaying(false);
     }
-  }, [watchTogetherAreaController]);
-
-  const [reactPlayer, setReactPlayer] = useState<ReactPlayer>();
+  }, [reactPlayer, watchTogetherAreaController.playList]);
 
   const ref = (player: ReactPlayer) => {
     setReactPlayer(player);
@@ -84,13 +91,26 @@ export default function WatchTogetherModal({
           setIsPlaying(false);
           if (watchTogetherAreaController.playList[0].pause && isHost) {
             // if(ViewingAreaController.host ==  coveyTownController.ourPlayer.id)
-            watchTogetherAreaController.playList[0].pause = false;
-            coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+            const currentVideo: Video = watchTogetherAreaController.playList[0];
+            currentVideo.pause = false;
+            coveyTownController.updateWatchTogetherVideo(watchTogetherAreaController, currentVideo);
           } else {
             console.log('Current user is not the host, cannot control the video');
-            setIsPlaying(true);
-            reactPlayer?.seekTo(12);
+            setIsPlaying(watchTogetherAreaController.playList[0].pause);
+            reactPlayer?.seekTo(watchTogetherAreaController.playList[0].elapsedTimeSec);
             // TODO: replace it with the controller's video playedSeconds.
+          }
+
+          if (
+            reactPlayer != undefined &&
+            reactPlayer.getCurrentTime() != 0 &&
+            reactPlayer.getCurrentTime() !=
+              watchTogetherAreaController.playList[0].elapsedTimeSec &&
+            isHost
+          ) {
+            const currentVideo: Video = watchTogetherAreaController.playList[0];
+            currentVideo.elapsedTimeSec = reactPlayer.getCurrentTime();
+            coveyTownController.updateWatchTogetherVideo(watchTogetherAreaController, currentVideo);
           }
         }}
         onEnded={() => {

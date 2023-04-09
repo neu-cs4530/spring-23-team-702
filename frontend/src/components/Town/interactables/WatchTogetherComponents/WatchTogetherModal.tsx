@@ -167,6 +167,7 @@ export function WatchTogetherVideo({
               coveyTownController={coveyTownController}
               videoPlaylist={playList}
               isHost={isHost}
+              handleNextVideo={handleNextVideo}
             />
           </Flex>
         </ModalBody>

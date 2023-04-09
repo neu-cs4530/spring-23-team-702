@@ -14,11 +14,13 @@ export default function WatchTogetherModal({
   coveyTownController,
   videoPlaylist,
   isHost,
+  handleNextVideo,
 }: {
   watchTogetherAreaController: WatchTogetherAreaController;
   coveyTownController: TownController;
   videoPlaylist: Array<Video>;
   isHost: boolean;
+  handleNextVideo: () => void;
 }): JSX.Element {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
@@ -114,9 +116,8 @@ export default function WatchTogetherModal({
           }
         }}
         onEnded={() => {
-          if (watchTogetherAreaController.playList[0].pause) {
-            watchTogetherAreaController.playList[0].pause = false;
-            coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+          if (isHost) {
+            handleNextVideo();
           }
         }}
       />

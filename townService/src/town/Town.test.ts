@@ -859,8 +859,10 @@ describe('Town', () => {
       expect(town.addWatchTogetherArea({ id: nanoid(), playList: [] })).toBe(false);
     });
     it('Should return false if the area is already active', () => {
-      expect(town.addWatchTogetherArea({ id: 'Name3', playList: [] })).toBe(true);
-      expect(town.addWatchTogetherArea({ id: 'Name3', playList: [] })).toBe(false);
+      expect(town.addWatchTogetherArea({ id: 'Name2', hostID: nanoid(), playList: [] })).toBe(true);
+      expect(town.addWatchTogetherArea({ id: 'Name2', hostID: nanoid(), playList: [] })).toBe(
+        false,
+      );
     });
     describe('When successful', () => {
       const newModel: WatchTogetherAreaModel = {

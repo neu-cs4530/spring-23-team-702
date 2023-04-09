@@ -12,8 +12,6 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import TownController from '../../../../classes/TownController';
-import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 import { Video } from '../../../../types/CoveyTownSocket';
 import Playlist from './PlayistVisualization';
 
@@ -23,15 +21,11 @@ export default function PlaylistDrawer({
   playList,
   handlePlaylistUpdate,
   handleNextVideo,
-  townController,
-  watchTogetherAreaController,
 }: {
   drawerIsOpen: boolean;
   close: () => void;
   playList: Array<Video>;
   handlePlaylistUpdate: (videoURL: string) => void;
-  townController: TownController;
-  watchTogetherAreaController: WatchTogetherAreaController;
   handleNextVideo: () => void;
 }): JSX.Element {
   const [inputVideoURL, setInputVideoURL] = useState<string>('');

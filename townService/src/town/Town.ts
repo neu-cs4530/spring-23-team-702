@@ -443,6 +443,29 @@ export default class Town {
     return true;
   }
 
+  public watchTogetherUpdateVideo(
+    watchTogetherArea: WatchTogetherAreaModel,
+    video: Video,
+  ): boolean {
+    const area = this._interactables.find(
+      eachArea => eachArea.id === watchTogetherArea.id,
+    ) as WatchTogetherArea;
+    if (area.playList.length === 0) {
+      return false;
+    }
+    const updatePlayList = watchTogetherArea.playList;
+    updatePlayList[0] = video;
+    const updatedWatchTogetherArea = {
+      id: watchTogetherArea.id,
+      hostID: watchTogetherArea.hostID,
+      video,
+      playList: updatePlayList,
+    };
+    area.updateModel(updatedWatchTogetherArea);
+    this._broadcastEmitter.emit('interactableUpdate', area.toModel());
+    return true;
+  }
+
   public watchTogetherHostID(watchTogetherArea: WatchTogetherAreaModel): string | undefined {
     const area = this._interactables.find(
       eachArea => eachArea.id === watchTogetherArea.id,

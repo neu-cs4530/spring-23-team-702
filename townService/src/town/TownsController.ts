@@ -309,37 +309,42 @@ export class TownsController extends Controller {
     }
   }
 
-  // /**
-  //  * Gets the video information of a given watch together area in a given town
-  //  *
-  //  * @param townID ID of the town in which to get the watch together area video information
-  //  * @param watchTogetherId interactable ID of the watch together area
-  //  * @param sessionToken session token of the player making the request, must
-  //  *        match the session token returned when the player joined the town
-  //  *
-  //  * @throws InvalidParametersError if the session token is not valid, or if the
-  //  *          watch together specified does not exist
-  //  */
-  // @Patch('{townID}/{watchTogetherId}/videoInfo')
-  // @Response<InvalidParametersError>(400, 'Invalid values specified')
-  // public async getWatchTogetherVideo(
-  //   @Path() townID: string,
-  //   @Path() watchTogetherId: string,
-  //   @Header('X-Session-Token') sessionToken: string,
-  // ): Promise<Video | undefined> {
-  //   const curTown = this._townsStore.getTownByID(townID);
-  //   if (!curTown) {
-  //     throw new InvalidParametersError('Invalid town ID');
-  //   }
-  //   if (!curTown.getPlayerBySessionToken(sessionToken)) {
-  //     throw new InvalidParametersError('Invalid session ID');
-  //   }
-  //   const watchTogetherArea = curTown.getInteractable(watchTogetherId);
-  //   if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
-  //     throw new InvalidParametersError('Invalid poster session ID');
-  //   }
-  //   return watchTogetherArea.video;
-  // }
+  /**
+   * Gets the video information of a given watch together area in a given town
+   *
+   * @param townID ID of the town in which to get the watch together area video information
+   * @param watchTogetherId interactable ID of the watch together area
+   * @param sessionToken session token of the player making the request, must
+   *        match the session token returned when the player joined the town
+   *
+   * @throws InvalidParametersError if the session token is not valid, or if the
+   *          watch together specified does not exist
+   */
+  @Patch('{townID}/{watchTogetherId}/updateVideoInfo')
+  @Response<InvalidParametersError>(400, 'Invalid values specified')
+  public async updateWatchTogetherVideo(
+    @Path() townID: string,
+    @Path() watchTogetherId: string,
+    @Header('X-Session-Token') sessionToken: string,
+    @Body() requestBody: { video: Video },
+  ): Promise<Video | undefined> {
+    const curTown = this._townsStore.getTownByID(townID);
+    if (!curTown) {
+      throw new InvalidParametersError('Invalid town ID');
+    }
+    if (!curTown.getPlayerBySessionToken(sessionToken)) {
+      throw new InvalidParametersError('Invalid session ID');
+    }
+    const watchTogetherArea = curTown.getInteractable(watchTogetherId);
+    if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
+      throw new InvalidParametersError('Invalid poster session ID');
+    }
+    const video = await curTown.watchTogetherUpdateVideo(watchTogetherArea, requestBody.video);
+    if (!video) {
+      throw new InvalidParametersError('Invalid watch together area');
+    }
+    return watchTogetherArea.video;
+  }
 
   /**
    * Gets the host ID of a given watch together area in a given town

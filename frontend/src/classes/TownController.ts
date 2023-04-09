@@ -816,6 +816,18 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     );
   }
 
+  public async updateWatchTogetherVideo(
+    watchTogetherArea: WatchTogetherAreaController,
+    video: Video,
+  ): Promise<Video> {
+    return this._townsService.updateWatchTogetherVideo(
+      this.townID,
+      watchTogetherArea.id,
+      this.sessionToken,
+      { video: video },
+    );
+  }
+
   /**
    * Determine which players are "nearby" -- that they should be included in our video call
    */

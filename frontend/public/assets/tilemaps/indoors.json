@@ -581,6 +581,17 @@
                  "width":193.875852887336,
                  "x":3521.38458978199,
                  "y":325.345315360293
+                }, 
+                {
+                 "height":81.5400649868186,
+                 "id":47,
+                 "name":"test",
+                 "rotation":0,
+                 "type":"WatchTogetherArea",
+                 "visible":true,
+                 "width":66.8260682974678,
+                 "x":3124.88504690086,
+                 "y":1058.79467843786
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -589,7 +600,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":47,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",

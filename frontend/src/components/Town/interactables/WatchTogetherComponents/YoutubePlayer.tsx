@@ -9,26 +9,25 @@ import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaCo
 
 export default function WatchTogetherModal({
   watchTogetherAreaController,
-  reactPlayerRef,
   coveyTownController,
   videoPlaylist,
   isHost,
 }: {
   watchTogetherAreaController: WatchTogetherAreaController;
-  reactPlayerRef: React.RefObject<ReactPlayer>;
   coveyTownController: TownController;
   videoPlaylist: Array<Video>;
   isHost: boolean;
 }): JSX.Element {
-  const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [currentPlayingVideo, setCurrentPlayingVideo] = useState<string>('');
+
   useEffect(() => {
     if (videoPlaylist.length != 0) {
       setCurrentPlayingVideo(videoPlaylist[0].url);
     } else {
       setCurrentPlayingVideo('');
     }
-  }, [videoPlaylist]);
+  }, [setCurrentPlayingVideo, videoPlaylist]);
 
   useEffect(() => {
     if (watchTogetherAreaController.playList[0] === undefined) {
@@ -38,10 +37,16 @@ export default function WatchTogetherModal({
     }
   }, [watchTogetherAreaController]);
 
+  const [reactPlayer, setReactPlayer] = useState<ReactPlayer>();
+
+  const ref = (player: ReactPlayer) => {
+    setReactPlayer(player);
+  };
+
   return (
     <Box flex='4' bg='white'>
       <ReactPlayer
-        ref={reactPlayerRef}
+        ref={ref}
         config={{
           youtube: {
             playerVars: {
@@ -55,13 +60,14 @@ export default function WatchTogetherModal({
         p='4'
         width='100%'
         height='100%'
-        controls={isHost}
+        controls={true}
         url={currentPlayingVideo}
         playing={isPlaying}
         onProgress={state => {
           if (
             state.playedSeconds != 0 &&
-            state.playedSeconds != watchTogetherAreaController.playList[0].elapsedTimeSec
+            state.playedSeconds != watchTogetherAreaController.playList[0].elapsedTimeSec &&
+            isHost
           ) {
             watchTogetherAreaController.playList[0].elapsedTimeSec = state.playedSeconds;
             coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
@@ -74,11 +80,17 @@ export default function WatchTogetherModal({
           }
         }}
         onPause={() => {
-          console.log('event trigger');
-          if (watchTogetherAreaController.playList[0].pause) {
+          console.log('Pause event triggered');
+          setIsPlaying(false);
+          if (watchTogetherAreaController.playList[0].pause && isHost) {
             // if(ViewingAreaController.host ==  coveyTownController.ourPlayer.id)
             watchTogetherAreaController.playList[0].pause = false;
             coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
+          } else {
+            console.log('Current user is not the host, cannot control the video');
+            setIsPlaying(true);
+            reactPlayer?.seekTo(12);
+            // TODO: replace it with the controller's video playedSeconds.
           }
         }}
         onEnded={() => {

@@ -34,7 +34,6 @@ export function WatchTogetherVideo({
   const coveyTownController = useTownController();
   const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
-
   // we can directly passing the Video object here rather than seperating them
   const video = useVideo(watchTogetherAreaController);
   // the front end knows host from here
@@ -52,7 +51,7 @@ export function WatchTogetherVideo({
     coveyTownController.watchTogetherPlayNext(watchTogetherAreaController);
   };
 
-  const reactPlayerRef = useRef<ReactPlayer>(null);
+  // const reactPlayerRef = useRef<ReactPlayer>(null);
 
   const toast = useToast();
 
@@ -63,8 +62,9 @@ export function WatchTogetherVideo({
   useEffect(() => {
     if (hostID === coveyTownController.ourPlayer.id) {
       setIsHost(true);
-      //Is control able to update by reinitiating the reactPlayerRef?
+      console.log('hostID changed');
     } else {
+      console.log('host ID false');
       setIsHost(false);
     }
   }, [coveyTownController.ourPlayer.id, hostID]);
@@ -97,7 +97,6 @@ export function WatchTogetherVideo({
   }, [coveyTownController, toast, watchTogetherAreaController.id]); // why there is dependencies here, might want to delete them
 
   if (hostID === undefined && watchTogetherAreaController) {
-    console.log('uiasdasd');
     createWatchTogetherArea();
   }
 
@@ -165,7 +164,6 @@ export function WatchTogetherVideo({
             {/*Video play box */}
             <WatchTogetherYoutubePlayer
               watchTogetherAreaController={watchTogetherAreaController}
-              reactPlayerRef={reactPlayerRef}
               coveyTownController={coveyTownController}
               videoPlaylist={playList}
               isHost={isHost}

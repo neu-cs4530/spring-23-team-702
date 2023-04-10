@@ -10,6 +10,7 @@ import {
   ReservedOrUserListener,
   TypedEventBroadcaster,
 } from 'socket.io/dist/typed-events';
+import Video from 'twilio/lib/rest/Video';
 import Player from './lib/Player';
 import {
   BoundingBox,
@@ -24,8 +25,8 @@ import {
   ViewingArea,
   PosterSessionArea,
   WatchTogetherArea,
+  Video as WatchTogetherVideo,
 } from './types/CoveyTownSocket';
-
 /**
  * Create a new conversation area using some random defaults
  * @param params
@@ -195,6 +196,30 @@ export function expectArraysToContainSameMembers<T>(actual: T[], expected: T[]):
   expected.forEach(expectedVal =>
     expect(actual.find(actualVal => actualVal === expectedVal)).toBeDefined(),
   );
+}
+
+export function mockGetVideoDetail(url: string): WatchTogetherVideo {
+  const video: WatchTogetherVideo = {
+    title: '',
+    thumbnail: 'test thumbnail',
+    url,
+    userID: nanoid(),
+    pause: false,
+    speed: 1,
+    elapsedTimeSec: 0,
+  };
+
+  switch (url) {
+    case 'https://www.youtube.com/watch?v=dQw4w9WgXcQ':
+      video.title = 'Rick Astley - Never Gonna Give You Up (Official Music Video)';
+      return video;
+    case 'https://www.youtube.com/watch?v=MMq6eq8meV4&t=1240s':
+      video.title = 'Yuki Murata - Piano Solo Concert (Full Concert) #Anoice';
+      return video;
+    default:
+      video.title = 'Add mock url link here';
+      return video;
+  }
 }
 
 export function isViewingArea(interactable: Interactable): interactable is ViewingArea {

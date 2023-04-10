@@ -383,7 +383,7 @@ export default class Town {
       eachArea => eachArea.id === watchTogetherArea.id,
     ) as WatchTogetherArea;
     // if the exisiting area is already occupied or the new area doesn't have a host.
-    if (!area || area.hostID !== undefined) {
+    if (!area) {
       return false;
     }
     area.updateModel(watchTogetherArea);

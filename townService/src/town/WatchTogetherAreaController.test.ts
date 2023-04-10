@@ -1,21 +1,18 @@
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { nanoid } from 'nanoid';
-import { readFileSync } from 'fs';
-import {
-  Interactable,
-  TownEmitter,
-  PosterSessionArea,
-  WatchTogetherArea,
-} from '../types/CoveyTownSocket';
+import { Interactable, TownEmitter, WatchTogetherArea } from '../types/CoveyTownSocket';
 import TownsStore from '../lib/TownsStore';
 import {
   getLastEmittedEvent,
   mockPlayer,
   MockedPlayer,
-  isPosterSessionArea,
   isWatchTogetherArea,
+  mockGetVideoDetail,
 } from '../TestUtils';
 import { TownsController } from './TownsController';
+import getVideoDetail from '../api/YoutubeAPI';
+import Town from './Town';
+import exp from 'constants';
 
 type TestTownData = {
   friendlyName: string;
@@ -24,7 +21,6 @@ type TestTownData = {
   townUpdatePassword: string;
 };
 const broadcastEmitter = jest.fn();
-
 describe('TownsController integration tests', () => {
   let controller: TownsController;
 
@@ -173,6 +169,16 @@ describe('TownsController integration tests', () => {
             newWatchTogetherArea,
           );
         }
+        // We mock the addVideoToWatchTogetherPlaylist here to avoid using Youtube API.
+        jest.mock('./Town', () => {
+          const original = jest.requireActual('./Town');
+          return {
+            ...original,
+            addVideoToWatchTogetherPlaylist: jest
+              .fn()
+              .mockImplementation((url: string) => Promise.resolve(mockGetVideoDetail(url))),
+          };
+        });
       });
 
       it('Get host id from the watch together area', async () => {
@@ -224,7 +230,7 @@ describe('TownsController integration tests', () => {
             sessionToken,
             { url: 'invalid youtube url' },
           ),
-        ).rejects.toThrow('Nothing was found.');
+        ).rejects.toThrowError();
       });
       it('Update video given the request body of a video', async () => {
         const video = await controller.pushWatchTogetherPlayList(

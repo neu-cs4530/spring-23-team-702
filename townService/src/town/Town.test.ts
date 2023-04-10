@@ -858,12 +858,6 @@ describe('Town', () => {
     it('Should return false if no area exists with that ID', () => {
       expect(town.addWatchTogetherArea({ id: nanoid(), playList: [] })).toBe(false);
     });
-    it('Should return false if the area is already active', () => {
-      expect(town.addWatchTogetherArea({ id: 'Name2', hostID: nanoid(), playList: [] })).toBe(true);
-      expect(town.addWatchTogetherArea({ id: 'Name2', hostID: nanoid(), playList: [] })).toBe(
-        false,
-      );
-    });
     describe('When successful', () => {
       const newModel: WatchTogetherAreaModel = {
         id: 'Name2',

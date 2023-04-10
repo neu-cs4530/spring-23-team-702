@@ -10,9 +10,6 @@ import {
   mockGetVideoDetail,
 } from '../TestUtils';
 import { TownsController } from './TownsController';
-import getVideoDetail from '../api/YoutubeAPI';
-import Town from './Town';
-import exp from 'constants';
 
 type TestTownData = {
   friendlyName: string;

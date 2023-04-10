@@ -871,7 +871,7 @@ describe('Town', () => {
         playList: [],
       };
       beforeEach(() => {
-        playerTestData.moveTo(160, 570); // Inside of "Name3" area'
+        playerTestData.moveTo(160, 570); // Inside of "Name2" area'
         newModel.hostID = player.id;
         expect(town.addWatchTogetherArea(newModel)).toBe(true);
       });

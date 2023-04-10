@@ -796,6 +796,11 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     );
   }
 
+  /**
+   * Update the video playlist of the area to the next video by poping away the first video.
+   * @param watchTogetherArea the watch together area controller
+   * @returns a promise wrapping whether the pop successed or not
+   */
   public async watchTogetherPlayNext(
     watchTogetherArea: WatchTogetherAreaController,
   ): Promise<boolean> {
@@ -806,6 +811,11 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     );
   }
 
+  /**
+   * Get the host id of the current video
+   * @param watchTogetherArea the watch together area controller
+   * @returns a promise wrapping the host id
+   */
   public async getWatchTogetherHostID(
     watchTogetherArea: WatchTogetherAreaController,
   ): Promise<string> {
@@ -816,6 +826,12 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     );
   }
 
+  /**
+   * Update the current video status, synchronizing the time and pause. 
+   * @param watchTogetherArea the watch together area controller
+   * @param video the video that's modified
+   * @returns a promise wrapping the modified video 
+   */
   public async updateWatchTogetherVideo(
     watchTogetherArea: WatchTogetherAreaController,
     video: Video,

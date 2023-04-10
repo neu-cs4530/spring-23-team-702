@@ -210,5 +210,5 @@ export function isConversationArea(interactable: Interactable): interactable is 
 }
 
 export function isWatchTogetherArea(interactable: Interactable): interactable is WatchTogetherArea {
-  return 'video' in interactable;
+  return 'playList' in interactable;
 }

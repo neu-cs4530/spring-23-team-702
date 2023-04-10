@@ -378,38 +378,6 @@ export class TownsController extends Controller {
     return watchTogetherArea.hostID;
   }
 
-  // /**
-  //  * Gets the playlist of a given watch together area in a given town
-  //  *
-  //  * @param townID ID of the town in which to get the watch together area playlist
-  //  * @param watchTogetherId interactable ID of the watch together area
-  //  * @param sessionToken session token of the player making the request, must
-  //  *        match the session token returned when the player joined the town
-  //  *
-  //  * @throws InvalidParametersError if the session token is not valid, or if the
-  //  *          watch together specified does not exist
-  //  */
-  // @Patch('{townID}/{watchTogetherId}/playList')
-  // @Response<InvalidParametersError>(400, 'Invalid values specified')
-  // public async getWatchTogetherPlayList(
-  //   @Path() townID: string,
-  //   @Path() watchTogetherId: string,
-  //   @Header('X-Session-Token') sessionToken: string,
-  // ): Promise<Video[]> {
-  //   const curTown = this._townsStore.getTownByID(townID);
-  //   if (!curTown) {
-  //     throw new InvalidParametersError('Invalid town ID');
-  //   }
-  //   if (!curTown.getPlayerBySessionToken(sessionToken)) {
-  //     throw new InvalidParametersError('Invalid session ID');
-  //   }
-  //   const watchTogetherArea = curTown.getInteractable(watchTogetherId);
-  //   if (!watchTogetherArea || !isWatchTogetherArea(watchTogetherArea)) {
-  //     throw new InvalidParametersError('Invalid poster session ID');
-  //   }
-  //   return watchTogetherArea.playList;
-  // }
-
   /**
    * Push new video to the playList of the given watch together area, as long as the
    * hostID is not undefined.
@@ -420,8 +388,7 @@ export class TownsController extends Controller {
    *        match the session token returned when the player joined the town
    *
    * @throws InvalidParametersError if the session token is not valid, or if the
-   *          poster session specified does not exist, or if the poster session specified
-   *          does not have an image
+   *          watch together specified does not exist
    */
   @Post('{townID}/{watchTogetherId}/addVideotoPlaylist') // Fixing
   @Response<InvalidParametersError>(400, 'Invalid values specified')

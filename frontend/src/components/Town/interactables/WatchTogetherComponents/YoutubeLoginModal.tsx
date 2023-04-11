@@ -147,7 +147,7 @@ export default function YoutubeLoginModal({
       'https://www.googleapis.com/auth/youtube.readonly',
     );
 
-    auth2.signIn();
+    await auth2.signIn();
     setIsLoggedIn(auth2.isSignedIn.get());
     setAccessToken(auth2.currentUser.get().getAuthResponse().access_token);
     setIsLoggedIn(auth2.isSignedIn.get());

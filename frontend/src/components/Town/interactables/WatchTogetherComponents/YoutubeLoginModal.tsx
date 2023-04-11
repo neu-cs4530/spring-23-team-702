@@ -22,6 +22,13 @@ import * as env from 'env-var';
 const GOOGLE_OAUTH_CLIENT_ID = env.get('REACT_APP_GOOGLE_OAUTH_CLIENT_ID').required().asString();
 const YOUTUBE_API_KEY = env.get('REACT_APP_YOUTUBE_API_KEY').required().asString();
 
+/**
+ * Fetch video information from the given playlist and add to the queue
+ *
+ * @param access_token the access token of the currently signed in user
+ * @param listID id of the playlist that needs to be added
+ * @param handlePlaylistUpdate function to add each individual youtube video to playlist
+ */
 export async function addPlaylistToQueue(
   access_token: string,
   listID: string,
@@ -52,6 +59,13 @@ export async function addPlaylistToQueue(
   return response;
 }
 
+/**
+ * Renders the given playlists such that each playlist is rendered with thumbnail, title and a add to queu button
+ *
+ * @param props: A 'playlist' array containing all needed info to render the playlist
+ *             : A 'access_token', the access token of the currently signed in user
+ *             : A 'handlePlaylistUpdate function, to add each individual youtube video to playlist
+ */
 export function Playlist({
   playlist,
   access_token,
@@ -91,6 +105,12 @@ export function Playlist({
   );
 }
 
+/**
+ * Fetch all playlist belongs to the given user (represented by access_token)
+ *
+ * @param access_token id of the logged in user
+ * @return Promise<Array<{ title: string; id: string; thumbnail: string }>>, an array of playlist info
+ */
 export async function fetchPlaylist(
   access_token: string,
 ): Promise<Array<{ title: string; id: string; thumbnail: string }>> {
@@ -124,6 +144,14 @@ export async function fetchPlaylist(
   return returnArray;
 }
 
+/**
+ * YoutubeLoginModal invoke the google login popup window and renders the playlists owned by the user
+ *
+ * @param props: A 'isOpen' boolean, denoting whether the modal is or not
+ *               A 'onClose' function, to be called when the modal close
+ *               A 'handlePlaylistUpdate' function, to add each individual youtube video to playlist
+ * @returns
+ */
 export default function YoutubeLoginModal({
   isOpen,
   onClose,
@@ -139,6 +167,7 @@ export default function YoutubeLoginModal({
   const [accessToken, setAccessToken] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
+  // Trigger the google OAUTH2.0 login with scope of reading the youtube info
   const login = useCallback(async () => {
     const gapi = await loadGapiInsideDOM();
     const auth2 = await loadAuth2(
@@ -164,6 +193,7 @@ export default function YoutubeLoginModal({
     }
   }, [isLoggedIn, isOpen, login]);
 
+  // fetch playlist of a user right after login complete
   useEffect(() => {
     if (isLoggedIn) {
       getPlatlists();

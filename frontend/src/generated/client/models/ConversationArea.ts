@@ -7,3 +7,4 @@ export type ConversationArea = {
     topic?: string;
     occupantsByID: Array<string>;
 };
+

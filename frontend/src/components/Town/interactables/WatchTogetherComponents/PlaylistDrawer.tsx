@@ -10,22 +10,24 @@ import {
   Input,
   Button,
   FormErrorMessage,
+  Box,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { TempVideo } from '../../../../types/CoveyTownSocket';
-import getVideoDetail from './YoutubeAPI';
-import Playlist from './PlayistVisualization';
+import { Video } from '../../../../types/CoveyTownSocket';
+import Playlist from './PlaylistVisualization';
 
 export default function PlaylistDrawer({
   drawerIsOpen,
   close,
   playList,
   handlePlaylistUpdate,
+  handleNextVideo,
 }: {
   drawerIsOpen: boolean;
   close: () => void;
-  playList: Array<TempVideo>;
-  handlePlaylistUpdate: (newVideoPlaylist: Array<TempVideo>) => void;
+  playList: Array<Video>;
+  handlePlaylistUpdate: (videoURL: string) => void;
+  handleNextVideo: () => void;
 }): JSX.Element {
   const [inputVideoURL, setInputVideoURL] = useState<string>('');
 
@@ -36,18 +38,9 @@ export default function PlaylistDrawer({
 
   const handleYotubeVideoURL = async () => {
     // check if it starts with youtube.com/youtu.be and has video id after v= with 11 digits id.
-    if (!isInValidYoutubeURL && !(playList.filter(e => e.videoID === inputVideoURL).length > 0)) {
+    if (!isInValidYoutubeURL && !(playList.filter(e => e.url === inputVideoURL).length > 0)) {
       // if matches, update the video playlist
-      const newPlaylist = [...playList];
-      const apiResponse = await getVideoDetail(inputVideoURL);
-      const playlistItem: TempVideo = {
-        videoID: inputVideoURL,
-        videoThumbnail: apiResponse.thumbnails,
-        videoTitle: apiResponse.title,
-      };
-      newPlaylist.push(playlistItem);
-      handlePlaylistUpdate(newPlaylist);
-      setInputVideoURL('');
+      handlePlaylistUpdate(inputVideoURL);
     }
   };
 
@@ -83,19 +76,21 @@ export default function PlaylistDrawer({
             />
             <FormErrorMessage>Please input a valid Youtube video URL</FormErrorMessage>
           </FormControl>
-
           {/* Next video play button */}
-          <Button
-            colorScheme='teal'
-            onClick={() => {
-              const newPlaylist = [...playList];
-              newPlaylist.shift();
-              handlePlaylistUpdate(newPlaylist);
-              console.log(newPlaylist);
-            }}
-            inlineSize={'full'}>
-            Next video
-          </Button>
+          <Box paddingTop={'2'}>
+            <Button
+              colorScheme='teal'
+              onClick={() => {
+                // const newPlaylist = [...playList];
+                // newPlaylist.shift();
+                // handlePlaylistUpdate(newPlaylist);
+                // console.log(newPlaylist);
+                handleNextVideo();
+              }}
+              inlineSize={'full'}>
+              Next video
+            </Button>
+          </Box>
           {/* Video preview list */}
           <Playlist playlist={playList}></Playlist>
         </DrawerBody>

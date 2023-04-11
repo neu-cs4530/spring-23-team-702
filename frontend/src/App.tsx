@@ -21,7 +21,6 @@ import { TownsServiceClient } from './generated/client';
 
 function App() {
   const [townController, setTownController] = useState<TownController | null>(null);
-
   const { error, setError } = useAppState();
   const connectionOptions = useConnectionOptions();
   const onDisconnect = useCallback(() => {

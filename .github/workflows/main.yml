@@ -27,6 +27,8 @@ jobs:
           TWILIO_API_AUTH_TOKEN: ${{ secrets.TWILIO_API_AUTH_TOKEN }}
           TWILIO_API_KEY_SECRET: ${{ secrets.TWILIO_API_KEY_SECRET }}
           TWILIO_API_KEY_SID: ${{ secrets.TWILIO_API_KEY_SID }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          
         run: cd townService; npm install && npm run prestart && npm run lint && npm test
 
       - name: Build and test frontend components

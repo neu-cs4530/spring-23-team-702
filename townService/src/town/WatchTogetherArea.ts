@@ -42,7 +42,19 @@ export default class WatchTogetherArea extends InteractableArea {
   }
 
   /**
-   * Removes a player from this poster session area.
+   * Add the player into this section, if the player is the first one added, then assign the player's id as host.
+   * @param player
+   */
+  public add(player: Player): void {
+    super.add(player);
+    if (this.hostID === undefined) {
+      this._hostID = player.id;
+      this._emitAreaChanged();
+    }
+  }
+
+  /**
+   * Removes a player from this watch together area.
    * If the host leave, we want to randomly chosse one of the viewer in our viewer lists as our host.
    * When the last player leaves, including the case when host is the last player, this method clears the poster and title, and resets the number of stars, and emits this update to all players in the Town.
    *
@@ -94,7 +106,7 @@ export default class WatchTogetherArea extends InteractableArea {
   public static fromMapObject(
     mapObject: ITiledMapObject,
     townEmitter: TownEmitter,
-  ): WatchTogetherAreaModel {
+  ): WatchTogetherArea {
     const { name, width, height } = mapObject;
     if (!width || !height) {
       throw new Error(`Malformed watch together area ${name}`);

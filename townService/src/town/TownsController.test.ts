@@ -256,6 +256,7 @@ describe('TownsController integration tests', () => {
     let player: MockedPlayer;
     let sessionToken: string;
     let interactables: Interactable[];
+    let playerID: string;
     beforeEach(async () => {
       testingTown = await createTownForTesting(undefined, true);
       player = mockPlayer(testingTown.townID);
@@ -263,6 +264,7 @@ describe('TownsController integration tests', () => {
       const initialData = getLastEmittedEvent(player.socket, 'initialize');
       sessionToken = initialData.sessionToken;
       interactables = initialData.interactables;
+      playerID = initialData.userID;
     });
 
     describe('Create Conversation Area', () => {

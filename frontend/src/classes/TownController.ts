@@ -8,7 +8,7 @@ import Interactable from '../components/Town/Interactable';
 import ViewingArea from '../components/Town/interactables/ViewingArea';
 import PosterSesssionArea from '../components/Town/interactables/PosterSessionArea';
 import { LoginController } from '../contexts/LoginControllerContext';
-import { TownsService, TownsServiceClient } from '../generated/client';
+import { TownsService, TownsServiceClient, Video } from '../generated/client';
 import useTownController from '../hooks/useTownController';
 import {
   ChatMessage,
@@ -30,6 +30,7 @@ import PlayerController from './PlayerController';
 import ViewingAreaController from './ViewingAreaController';
 import PosterSessionAreaController from './PosterSessionAreaController';
 import WatchTogetherAreaController from './WatchTogetherAreaController';
+import WatchTogetherArea from '../components/Town/interactables/WatchTogetherArea';
 
 const CALCULATE_NEARBY_PLAYERS_DELAY = 300;
 
@@ -582,7 +583,6 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * @param newArea
    */
   async createWatchTogetherArea(newArea: WatchTogetherAreaModel) {
-    console.warn('Intermediate watch together area: ' + JSON.stringify(newArea, null, 4));
     await this._townsService.createWatchTogetherArea(this.townID, this.sessionToken, newArea);
   }
 
@@ -699,11 +699,11 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   /**
    * Retrieve the Watch Together Area controller that corresponds to a WatchTogetherAreaModel, creating one if necessary
    *
-   * @param posterSessionArea
+   * @param watchTogetherArea
    * @returns
    */
   public getWatchTogetherAreaController(
-    watchTogetherArea: WatchTogetherAreaModel,
+    watchTogetherArea: WatchTogetherArea,
   ): WatchTogetherAreaController {
     const existingController = this._watchTogetherAreas.find(
       eachExistingArea => eachExistingArea.id === watchTogetherArea.id,
@@ -741,7 +741,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   }
 
   /**
-   * Emit a watcj together area update to the townService
+   * Emit a watch together area update to the townService
    * @param posterSessionArea The Poster Session Area Controller that is updated and should be emitted
    *    with the event
    */
@@ -776,6 +776,71 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
       this.townID,
       posterSessionArea.id,
       this.sessionToken,
+    );
+  }
+
+  /**
+   * Fetch the video given the watch together area model, the video will automaticly add to playlist and return here.
+   * @param watchTogetherArea the watch together area controller
+   * @returns a promise wrapping the video given the url.
+   */
+  public async fetchVideoInfo(
+    watchTogetherArea: WatchTogetherAreaController,
+    url: string,
+  ): Promise<Video> {
+    return this._townsService.pushWatchTogetherPlayList(
+      this.townID,
+      watchTogetherArea.id,
+      this.sessionToken,
+      { url: url },
+    );
+  }
+
+  /**
+   * Update the video playlist of the area to the next video by poping away the first video.
+   * @param watchTogetherArea the watch together area controller
+   * @returns a promise wrapping whether the pop successed or not
+   */
+  public async watchTogetherPlayNext(
+    watchTogetherArea: WatchTogetherAreaController,
+  ): Promise<boolean> {
+    return this._townsService.watchTogetherPlayNext(
+      this.townID,
+      watchTogetherArea.id,
+      this.sessionToken,
+    );
+  }
+
+  /**
+   * Get the host id of the current video
+   * @param watchTogetherArea the watch together area controller
+   * @returns a promise wrapping the host id
+   */
+  public async getWatchTogetherHostID(
+    watchTogetherArea: WatchTogetherAreaController,
+  ): Promise<string> {
+    return this._townsService.getWatchTogetherHostId(
+      this.townID,
+      watchTogetherArea.id,
+      this.sessionToken,
+    );
+  }
+
+  /**
+   * Update the current video status, synchronizing the time and pause.
+   * @param watchTogetherArea the watch together area controller
+   * @param video the video that's modified
+   * @returns a promise wrapping the modified video
+   */
+  public async updateWatchTogetherVideo(
+    watchTogetherArea: WatchTogetherAreaController,
+    video: Video,
+  ): Promise<Video> {
+    return this._townsService.updateWatchTogetherVideo(
+      this.townID,
+      watchTogetherArea.id,
+      this.sessionToken,
+      { video: video },
     );
   }
 

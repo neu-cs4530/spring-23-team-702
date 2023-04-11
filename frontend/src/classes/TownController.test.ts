@@ -1,7 +1,7 @@
 import { mock, mockClear, MockProxy } from 'jest-mock-extended';
 import { nanoid } from 'nanoid';
 import { LoginController } from '../contexts/LoginControllerContext';
-import { ViewingArea } from '../generated/client';
+import { Video, ViewingArea, WatchTogetherArea } from '../generated/client';
 import { PosterSessionArea } from '../generated/client';
 import {
   EventNames,
@@ -18,11 +18,17 @@ import {
   ServerToClientEvents,
   TownJoinResponse,
 } from '../types/CoveyTownSocket';
-import { isConversationArea, isPosterSessionArea, isViewingArea } from '../types/TypeUtils';
+import {
+  isConversationArea,
+  isPosterSessionArea,
+  isViewingArea,
+  isWatchTogetherArea,
+} from '../types/TypeUtils';
 import PlayerController from './PlayerController';
 import PosterSessionAreaController from './PosterSessionAreaController';
 import TownController, { TownEvents } from './TownController';
 import ViewingAreaController from './ViewingAreaController';
+import WatchTogetherAreaController from './WatchTogetherAreaController';
 
 /**
  * Mocks the socket-io client constructor such that it will always return the same
@@ -460,6 +466,72 @@ describe('TownController', () => {
           posterSessionArea.imageContents = nanoid();
           eventListener(posterSessionArea);
           expect(listener).toBeCalledWith(posterSessionArea.imageContents);
+        });
+      });
+      describe('Watch Together Area updates', () => {
+        function watchTogetherAreaOnTown() {
+          return {
+            ...(townJoinResponse.interactables.find(eachInteractable =>
+              isWatchTogetherArea(eachInteractable),
+            ) as WatchTogetherArea),
+          };
+        }
+        let watchTogetherArea: WatchTogetherArea;
+        let watchTogetherAreaController: WatchTogetherAreaController;
+        let eventListener: (updatge: WatchTogetherArea) => void;
+        let newVideo: Video;
+        beforeEach(() => {
+          watchTogetherArea = watchTogetherAreaOnTown();
+          const controller = testController.watchTogetherAreas.find(
+            eachArea => eachArea.id === watchTogetherArea.id,
+          );
+          if (!controller) {
+            fail(
+              `Could not find watch together area controller for watch together area ${watchTogetherArea.id}`,
+            );
+          }
+          watchTogetherAreaController = controller;
+          eventListener = getEventListener(mockSocket, 'interactableUpdate');
+          newVideo = {
+            title: 'Test',
+            thumbnail: 'test',
+            url: 'test url',
+            userID: nanoid(),
+            pause: false,
+            speed: 1,
+            elapsedTimeSec: 8848,
+          };
+        });
+        it('interactableUpdate and watch together hooks Updates the viewing area model', () => {
+          watchTogetherArea.video = newVideo;
+          watchTogetherArea.playList = [newVideo];
+          watchTogetherArea.hostID = nanoid();
+          eventListener(watchTogetherArea);
+          expect(watchTogetherAreaController.watchTogetherAreaModel()).toEqual(watchTogetherArea);
+        });
+        it('[REE1] interactableUpdate and watch together hooks Emits a hostChange event if the host changes', () => {
+          const listener = jest.fn();
+          watchTogetherAreaController.addListener('hostChange', listener);
+
+          watchTogetherArea.hostID = nanoid();
+          eventListener(watchTogetherArea);
+          expect(listener).toBeCalledWith(watchTogetherArea.hostID);
+        });
+        it('[REE1] interactableUpdate and watch together hooks Emits a video event if the host changes', () => {
+          const listener = jest.fn();
+          watchTogetherAreaController.addListener('videoChange', listener);
+
+          watchTogetherArea.video = newVideo;
+          eventListener(watchTogetherArea);
+          expect(listener).toBeCalledWith(watchTogetherArea.video);
+        });
+        it('[REE1] interactableUpdate and watch together hooks Emits a playListChange event if the host changes', () => {
+          const listener = jest.fn();
+          watchTogetherAreaController.addListener('playlistChange', listener);
+
+          watchTogetherArea.playList = [newVideo];
+          eventListener(watchTogetherArea);
+          expect(listener).toBeCalledWith(watchTogetherArea.playList);
         });
       });
     });

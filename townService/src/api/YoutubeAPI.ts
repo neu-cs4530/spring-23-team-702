@@ -33,7 +33,7 @@ export default async function getVideoDetail(videoURL: string): Promise<{
   const { snippet } = response.items[0];
 
   return {
-    thumbnails: snippet.thumbnails.default.url,
+    thumbnails: snippet.thumbnails.high.url,
     title: snippet.title,
   };
 }

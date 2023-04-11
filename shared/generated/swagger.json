@@ -188,10 +188,6 @@
 					"userID": {
 						"type": "string"
 					},
-					"durationSec": {
-						"type": "number",
-						"format": "double"
-					},
 					"url": {
 						"type": "string"
 					},
@@ -207,7 +203,6 @@
 					"speed",
 					"pause",
 					"userID",
-					"durationSec",
 					"url",
 					"thumbnail",
 					"title"
@@ -775,6 +770,285 @@
 						}
 					}
 				}
+			}
+		},
+		"/towns/{townID}/{watchTogetherId}/updateVideoInfo": {
+			"patch": {
+				"operationId": "UpdateWatchTogetherVideo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Video"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid values specified",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InvalidParametersError"
+								}
+							}
+						}
+					}
+				},
+				"description": "Gets the video information of a given watch together area in a given town",
+				"tags": [
+					"towns"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "ID of the town in which to get the watch together area video information",
+						"in": "path",
+						"name": "townID",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "interactable ID of the watch together area",
+						"in": "path",
+						"name": "watchTogetherId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"in": "header",
+						"name": "X-Session-Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"video": {
+										"$ref": "#/components/schemas/Video"
+									}
+								},
+								"required": [
+									"video"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/towns/{townID}/{watchTogetherId}/hostID": {
+			"patch": {
+				"operationId": "GetWatchTogetherHostID",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid values specified",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InvalidParametersError"
+								}
+							}
+						}
+					}
+				},
+				"description": "Gets the host ID of a given watch together area in a given town",
+				"tags": [
+					"towns"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "ID of the town in which to get the watch together area hostID",
+						"in": "path",
+						"name": "townID",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "interactable ID of the watch together area",
+						"in": "path",
+						"name": "watchTogetherId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"in": "header",
+						"name": "X-Session-Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/towns/{townID}/{watchTogetherId}/addVideotoPlaylist": {
+			"post": {
+				"operationId": "PushWatchTogetherPlayList",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Video"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid values specified",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InvalidParametersError"
+								}
+							}
+						}
+					}
+				},
+				"description": "Push new video to the playList of the given watch together area, as long as the\nhostID is not undefined.",
+				"tags": [
+					"towns"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "ID of the town in which to push watch together area playList",
+						"in": "path",
+						"name": "townID",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "watchTogetherId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"in": "header",
+						"name": "X-Session-Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"url": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"url"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/towns/{townID}/{watchTogetherId}/playNext": {
+			"patch": {
+				"operationId": "WatchTogetherPlayNext",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid values specified",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InvalidParametersError"
+								}
+							}
+						}
+					}
+				},
+				"description": "Play the next video in a given watch together area in a given town",
+				"tags": [
+					"towns"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "ID of the town in which to get the watch together area",
+						"in": "path",
+						"name": "townID",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "interactable ID of the watch together area",
+						"in": "path",
+						"name": "watchTogetherId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "session token of the player making the request, must\nmatch the session token returned when the player joined the town",
+						"in": "header",
+						"name": "X-Session-Token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},

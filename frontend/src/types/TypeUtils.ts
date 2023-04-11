@@ -31,5 +31,5 @@ export function isPosterSessionArea(interactable: Interactable): interactable is
  * Test to see if an interactable is a Watch Together session area
  */
 export function isWatchTogetherArea(interactable: Interactable): interactable is WatchTogetherArea {
-  return 'video' in interactable;
+  return 'playList' in interactable;
 }

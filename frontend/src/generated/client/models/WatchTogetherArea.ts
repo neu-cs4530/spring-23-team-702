@@ -2,20 +2,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Video = { 
-  title: string;
-  thumbnail: string;
-  url: string;
-  durationSec: number; 
-  userID: string;
-  pause: boolean; 
-  speed: number;
-  elapsedTimeSec: number; 
+import type { Video } from './Video';
+
+export type WatchTogetherArea = {
+    id: string;
+    hostID?: string;
+    video?: Video;
+    playList: Array<Video>;
 };
 
-export interface WatchTogetherArea {
-  id: string;
-  hostID?: string;
-  video?: Video;
-  playList: Video[];
-}

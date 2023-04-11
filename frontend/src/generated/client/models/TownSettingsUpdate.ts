@@ -6,3 +6,4 @@ export type TownSettingsUpdate = {
     isPubliclyListed?: boolean;
     friendlyName?: string;
 };
+

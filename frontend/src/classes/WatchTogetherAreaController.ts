@@ -39,23 +39,19 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
     return this._model.id;
   }
 
-  public get host(): string | undefined {
+  public get hostID(): string | undefined {
     return this._model.hostID;
   }
 
-  public watchTogetherAreaModel(): WatchTogetherAreaModel {
-    return this._model;
+  /**
+   * Set the hostID for the model, may need to consider the host logic
+   */
+  public set hostID(hostID: string | undefined) {
+    if (this._model.hostID !== hostID) {
+      this._model.hostID = hostID;
+      this.emit('hostChange', hostID);
+    }
   }
-
-  // /**
-  //  * Set the host for the model, may need to consider the host logic
-  //  */
-  // public set host(host: string | undefined) {
-  //   if (this._model.hostID !== host) {
-  //     this._model.hostID = host;
-  //     this.emit('hostChange', host);
-  //   }
-  // }
 
   public get playList(): Video[] {
     return this._model.playList;
@@ -87,17 +83,21 @@ export default class WatchTogetherAreaController extends (EventEmitter as new ()
     }
   }
 
+  public watchTogetherAreaModel(): WatchTogetherAreaModel {
+    return this._model;
+  }
+
   public updateFrom(updatedModel: WatchTogetherAreaModel): void {
-    this._model.hostID = updatedModel.hostID;
-    this._model.playList = updatedModel.playList;
-    this._model.video = updatedModel.video;
+    this.hostID = updatedModel.hostID;
+    this.playList = updatedModel.playList;
+    this.video = updatedModel.video;
   }
 }
 
 /**
  * A hook that returns the video given the controller
  */
-export function useStars(controller: WatchTogetherAreaController): Video | undefined {
+export function useVideo(controller: WatchTogetherAreaController): Video | undefined {
   const [video, setVideo] = useState(controller.video);
   useEffect(() => {
     controller.addListener('videoChange', setVideo);
@@ -126,7 +126,7 @@ export function usePlayList(controller: WatchTogetherAreaController): Video[] {
  * A hook that returns the video given the controller
  */
 export function useHost(controller: WatchTogetherAreaController): string | undefined {
-  const [hostID, useHostID] = useState(controller.host);
+  const [hostID, useHostID] = useState(controller.hostID);
   useEffect(() => {
     controller.addListener('hostChange', useHostID);
     return () => {

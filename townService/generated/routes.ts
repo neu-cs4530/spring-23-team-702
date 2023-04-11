@@ -88,7 +88,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Video": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"elapsedTimeSec":{"dataType":"double","required":true},"speed":{"dataType":"double","required":true},"pause":{"dataType":"boolean","required":true},"userID":{"dataType":"string","required":true},"durationSec":{"dataType":"double","required":true},"url":{"dataType":"string","required":true},"thumbnail":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"elapsedTimeSec":{"dataType":"double","required":true},"speed":{"dataType":"double","required":true},"pause":{"dataType":"boolean","required":true},"userID":{"dataType":"string","required":true},"url":{"dataType":"string","required":true},"thumbnail":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "WatchTogetherArea": {
@@ -370,6 +370,116 @@ export function RegisterRoutes(app: express.Router) {
 
 
               const promise = controller.createWatchTogetherArea.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/towns/:townID/:watchTogetherId/updateVideoInfo',
+            ...(fetchMiddlewares<RequestHandler>(TownsController)),
+            ...(fetchMiddlewares<RequestHandler>(TownsController.prototype.updateWatchTogetherVideo)),
+
+            function TownsController_updateWatchTogetherVideo(request: any, response: any, next: any) {
+            const args = {
+                    townID: {"in":"path","name":"townID","required":true,"dataType":"string"},
+                    watchTogetherId: {"in":"path","name":"watchTogetherId","required":true,"dataType":"string"},
+                    sessionToken: {"in":"header","name":"X-Session-Token","required":true,"dataType":"string"},
+                    requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"video":{"ref":"Video","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TownsController();
+
+
+              const promise = controller.updateWatchTogetherVideo.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/towns/:townID/:watchTogetherId/hostID',
+            ...(fetchMiddlewares<RequestHandler>(TownsController)),
+            ...(fetchMiddlewares<RequestHandler>(TownsController.prototype.getWatchTogetherHostID)),
+
+            function TownsController_getWatchTogetherHostID(request: any, response: any, next: any) {
+            const args = {
+                    townID: {"in":"path","name":"townID","required":true,"dataType":"string"},
+                    watchTogetherId: {"in":"path","name":"watchTogetherId","required":true,"dataType":"string"},
+                    sessionToken: {"in":"header","name":"X-Session-Token","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TownsController();
+
+
+              const promise = controller.getWatchTogetherHostID.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/towns/:townID/:watchTogetherId/addVideotoPlaylist',
+            ...(fetchMiddlewares<RequestHandler>(TownsController)),
+            ...(fetchMiddlewares<RequestHandler>(TownsController.prototype.pushWatchTogetherPlayList)),
+
+            function TownsController_pushWatchTogetherPlayList(request: any, response: any, next: any) {
+            const args = {
+                    townID: {"in":"path","name":"townID","required":true,"dataType":"string"},
+                    watchTogetherId: {"in":"path","name":"watchTogetherId","required":true,"dataType":"string"},
+                    sessionToken: {"in":"header","name":"X-Session-Token","required":true,"dataType":"string"},
+                    requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"url":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TownsController();
+
+
+              const promise = controller.pushWatchTogetherPlayList.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/towns/:townID/:watchTogetherId/playNext',
+            ...(fetchMiddlewares<RequestHandler>(TownsController)),
+            ...(fetchMiddlewares<RequestHandler>(TownsController.prototype.watchTogetherPlayNext)),
+
+            function TownsController_watchTogetherPlayNext(request: any, response: any, next: any) {
+            const args = {
+                    townID: {"in":"path","name":"townID","required":true,"dataType":"string"},
+                    watchTogetherId: {"in":"path","name":"watchTogetherId","required":true,"dataType":"string"},
+                    sessionToken: {"in":"header","name":"X-Session-Token","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TownsController();
+
+
+              const promise = controller.watchTogetherPlayNext.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

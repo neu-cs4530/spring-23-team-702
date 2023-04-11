@@ -17,6 +17,7 @@ import {
   PlayerLocation,
   TownEmitter,
   ViewingArea as ViewingAreaModel,
+  WatchTogetherArea as WatchTogetherAreaModel,
 } from '../types/CoveyTownSocket';
 import ConversationArea from './ConversationArea';
 import Town from './Town';
@@ -236,6 +237,48 @@ const testingMaps: TestMapDict = {
             width: 467,
             x: 612,
             y: 120,
+          },
+        ],
+        opacity: 1,
+        type: 'objectgroup',
+        visible: true,
+        x: 0,
+        y: 0,
+      },
+    ],
+  },
+  twoWatchTogether: {
+    tiledversion: '1.9.0',
+    tileheight: 32,
+    tilesets: [],
+    tilewidth: 32,
+    type: 'map',
+    layers: [
+      {
+        id: 4,
+        name: 'Objects',
+        objects: [
+          {
+            type: 'WatchTogetherArea',
+            height: 237,
+            id: 39,
+            name: 'Name1',
+            rotation: 0,
+            visible: true,
+            width: 326,
+            x: 40,
+            y: 120,
+          },
+          {
+            type: 'WatchTogetherArea',
+            height: 266,
+            id: 43,
+            name: 'Name2',
+            rotation: 0,
+            visible: true,
+            width: 326,
+            x: 155,
+            y: 566,
           },
         ],
         opacity: 1,
@@ -808,7 +851,81 @@ describe('Town', () => {
       });
     });
   });
+  describe('[T1] addWatchTogetherArea', () => {
+    beforeEach(async () => {
+      town.initializeFromMap(testingMaps.twoWatchTogether);
+    });
+    it('Should return false if no area exists with that ID', () => {
+      expect(town.addWatchTogetherArea({ id: nanoid(), playList: [] })).toBe(false);
+    });
+    describe('When successful', () => {
+      const newModel: WatchTogetherAreaModel = {
+        id: 'Name2',
+        video: undefined,
+        playList: [],
+      };
+      beforeEach(() => {
+        playerTestData.moveTo(160, 570); // Inside of "Name2" area'
+        newModel.hostID = player.id;
+        expect(town.addWatchTogetherArea(newModel)).toBe(true);
+      });
 
+      it('Should update the local model for that area', () => {
+        const watchTogetherArea = town.getInteractable('Name2');
+        expect(watchTogetherArea.toModel()).toEqual(newModel);
+      });
+
+      it('Should emit an interactableUpdate message', () => {
+        const lastEmittedUpdate = getLastEmittedEvent(townEmitter, 'interactableUpdate');
+        expect(lastEmittedUpdate).toEqual(newModel);
+      });
+      it('Should include any players in that area as occupants', () => {
+        const watchTogetherArea = town.getInteractable('Name2');
+        expect(watchTogetherArea.occupantsByID).toEqual([player.id]);
+      });
+    });
+  });
+  describe('[T1] addWatchTogetherArea', () => {
+    const videoURL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    const videoURL2 = 'https://www.youtube.com/watch?v=MMq6eq8meV4&t=1240s';
+    let newModel: WatchTogetherAreaModel;
+    beforeEach(async () => {
+      town.initializeFromMap(testingMaps.twoWatchTogether);
+      newModel = {
+        id: 'Name2',
+        video: undefined,
+        playList: [],
+      };
+      playerTestData.moveTo(160, 570); // Inside of "Name2" area'
+      newModel.hostID = player.id;
+      expect(town.addWatchTogetherArea(newModel)).toBe(true);
+    });
+    it('Should able to fetch video from youtube api', async () => {
+      const video = await town.addVideoToWatchTogetherPlaylist(videoURL, newModel, player.id);
+      const video2 = await town.addVideoToWatchTogetherPlaylist(videoURL2, newModel, player.id);
+      expect(video.title).toEqual('Rick Astley - Never Gonna Give You Up (Official Music Video)');
+      expect(video.elapsedTimeSec).toEqual(0); // video begins at 0 seconds
+      expect(video.pause).toEqual(true); // video default is playing
+      expect(video2.title).toBe('Yuki Murata - Piano Solo Concert (Full Concert) #Anoice');
+    });
+    it('Should able to play next video when video exists', async () => {
+      await town.addVideoToWatchTogetherPlaylist(videoURL, newModel, player.id);
+      expect(town.watchTogetherPlayNext(newModel)).toEqual(true);
+    });
+    it('Should not play next video when no video exists', async () => {
+      expect(town.watchTogetherPlayNext(newModel)).toEqual(false);
+    });
+    it('Should update video given a video info', async () => {
+      const video = await town.addVideoToWatchTogetherPlaylist(videoURL, newModel, player.id);
+      video.elapsedTimeSec = 1000;
+      const result = await town.watchTogetherUpdateVideo(newModel, video);
+      expect(result).toBe(true);
+      expect(newModel.playList[0].elapsedTimeSec).toEqual(1000);
+    });
+    it('Should able to get host id', async () => {
+      expect(town.watchTogetherHostID(newModel)).toEqual(player.id);
+    });
+  });
   describe('disconnectAllPlayers', () => {
     beforeEach(() => {
       town.disconnectAllPlayers();
@@ -861,6 +978,16 @@ describe('Town', () => {
       expect(posterSessionArea1.boundingBox).toEqual({ x: 40, y: 120, height: 237, width: 326 });
       expect(posterSessionArea2.id).toEqual('Name2');
       expect(posterSessionArea2.boundingBox).toEqual({ x: 612, y: 120, height: 266, width: 467 });
+      expect(town.interactables.length).toBe(2);
+    });
+    it('Creates a WatchTogether instance for each region on the map', async () => {
+      town.initializeFromMap(testingMaps.twoPosters);
+      const watchTogetherArea1 = town.getInteractable('Name1');
+      const watchTogetherArea2 = town.getInteractable('Name2');
+      expect(watchTogetherArea1.id).toEqual('Name1');
+      expect(watchTogetherArea1.boundingBox).toEqual({ x: 40, y: 120, height: 237, width: 326 });
+      expect(watchTogetherArea2.id).toEqual('Name2');
+      expect(watchTogetherArea2.boundingBox).toEqual({ x: 612, y: 120, height: 266, width: 467 });
       expect(town.interactables.length).toBe(2);
     });
     describe('Updating interactable state in playerMovements', () => {

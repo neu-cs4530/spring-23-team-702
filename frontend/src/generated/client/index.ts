@@ -16,6 +16,8 @@ export type { Town } from './models/Town';
 export type { TownCreateParams } from './models/TownCreateParams';
 export type { TownCreateResponse } from './models/TownCreateResponse';
 export type { TownSettingsUpdate } from './models/TownSettingsUpdate';
+export type { Video } from './models/Video';
 export type { ViewingArea } from './models/ViewingArea';
+export type { WatchTogetherArea } from './models/WatchTogetherArea';
 
 export { TownsService } from './services/TownsService';

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { usePlayersInVideoCall } from '../../../../../classes/TownController';
 import ViewingAreaVideo from '../../../../Town/interactables/ViewingAreaVideo';
+import WatcherTogetherArea from '../../../../Town/interactables/WatchTogetherComponents/WatchTogetherModal';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
 import useParticipants, { ParticipantWithSlot } from '../../hooks/useParticipants/useParticipants';
 import useScreenShareParticipant from '../../hooks/useScreenShareParticipant/useScreenShareParticipant';
@@ -125,6 +126,7 @@ export default function ParticipantList() {
         slot={0}
       />
       <ViewingAreaVideo />
+      <WatcherTogetherArea />
 
       {participants
         .filter(p => nearbyPlayers.find(player => player.id == p.participant.identity))

@@ -31,3 +31,4 @@ export class TownsServiceClient {
         this.towns = new TownsService(this.request);
     }
 }
+

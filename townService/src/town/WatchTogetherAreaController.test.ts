@@ -1,15 +1,10 @@
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { nanoid } from 'nanoid';
-import { Interactable, TownEmitter, WatchTogetherArea } from '../types/CoveyTownSocket';
+import { Interactable, TownEmitter, Video, WatchTogetherArea } from '../types/CoveyTownSocket';
 import TownsStore from '../lib/TownsStore';
-import {
-  getLastEmittedEvent,
-  mockPlayer,
-  MockedPlayer,
-  isWatchTogetherArea,
-  mockGetVideoDetail,
-} from '../TestUtils';
+import * as TestUtils from '../TestUtils';
 import { TownsController } from './TownsController';
+
 
 type TestTownData = {
   friendlyName: string;
@@ -69,15 +64,15 @@ describe('TownsController integration tests', () => {
 
   describe('Interactables', () => {
     let testingTown: TestTownData;
-    let player: MockedPlayer;
+    let player: TestUtils.MockedPlayer;
     let sessionToken: string;
     let interactables: Interactable[];
     let hostID: string;
     beforeEach(async () => {
       testingTown = await createTownForTesting(undefined, true);
-      player = mockPlayer(testingTown.townID);
+      player = TestUtils.mockPlayer(testingTown.townID);
       await controller.joinTown(player.socket);
-      const initialData = getLastEmittedEvent(player.socket, 'initialize');
+      const initialData = TestUtils.getLastEmittedEvent(player.socket, 'initialize');
       sessionToken = initialData.sessionToken;
       interactables = initialData.interactables;
       hostID = initialData.userID;
@@ -85,7 +80,9 @@ describe('TownsController integration tests', () => {
     });
     describe('Create Watch Together Area', () => {
       it('Executes without error when creating a new watch together area', async () => {
-        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        const watchTogetherArea = interactables.find(
+          TestUtils.isWatchTogetherArea,
+        ) as WatchTogetherArea;
         if (!watchTogetherArea) {
           fail('Expected at least one watch together area to be returned in the initial join data');
         } else {
@@ -102,8 +99,8 @@ describe('TownsController integration tests', () => {
           );
           // Check to see that the watch together area was successfully updated
           const townEmitter = getBroadcastEmitterForTownID(testingTown.townID);
-          const updateMessage = getLastEmittedEvent(townEmitter, 'interactableUpdate');
-          if (isWatchTogetherArea(updateMessage)) {
+          const updateMessage = TestUtils.getLastEmittedEvent(townEmitter, 'interactableUpdate');
+          if (TestUtils.isWatchTogetherArea(updateMessage)) {
             expect(updateMessage).toEqual(newWatchTogetherArea);
           } else {
             fail(
@@ -113,7 +110,9 @@ describe('TownsController integration tests', () => {
         }
       });
       it('Returns an error message if the town ID is invalid', async () => {
-        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        const watchTogetherArea = interactables.find(
+          TestUtils.isWatchTogetherArea,
+        ) as WatchTogetherArea;
         const neWatchTogetherArea: WatchTogetherArea = {
           id: watchTogetherArea.id,
           playList: watchTogetherArea.playList,
@@ -126,7 +125,9 @@ describe('TownsController integration tests', () => {
       });
       it('Checks for a valid session token before creating a watchTogether area', async () => {
         const invalidSessionToken = nanoid();
-        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        const watchTogetherArea = interactables.find(
+          TestUtils.isWatchTogetherArea,
+        ) as WatchTogetherArea;
         const neWatchTogetherArea: WatchTogetherArea = {
           id: watchTogetherArea.id,
           playList: watchTogetherArea.playList,
@@ -138,7 +139,9 @@ describe('TownsController integration tests', () => {
         ).rejects.toThrow();
       });
       it('Returns an error message if addWatchTogetherArea returns false', async () => {
-        const watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        const watchTogetherArea = interactables.find(
+          TestUtils.isWatchTogetherArea,
+        ) as WatchTogetherArea;
         watchTogetherArea.id = nanoid();
         await expect(
           controller.createWatchTogetherArea(testingTown.townID, sessionToken, watchTogetherArea),
@@ -150,7 +153,7 @@ describe('TownsController integration tests', () => {
       const videoURL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
       const videoURL2 = 'https://www.youtube.com/watch?v=MMq6eq8meV4&t=1240s';
       beforeEach(async () => {
-        watchTogetherArea = interactables.find(isWatchTogetherArea) as WatchTogetherArea;
+        watchTogetherArea = interactables.find(TestUtils.isWatchTogetherArea) as WatchTogetherArea;
         if (!watchTogetherArea) {
           fail('Expected at least one poster session area to be returned in the initial join data');
         } else {
@@ -160,22 +163,13 @@ describe('TownsController integration tests', () => {
             playList: [],
             video: undefined,
           };
+
           await controller.createWatchTogetherArea(
             testingTown.townID,
             sessionToken,
             newWatchTogetherArea,
           );
         }
-        // We mock the addVideoToWatchTogetherPlaylist here to avoid using Youtube API.
-        jest.mock('./Town', () => {
-          const original = jest.requireActual('./Town');
-          return {
-            ...original,
-            addVideoToWatchTogetherPlaylist: jest
-              .fn()
-              .mockImplementation((url: string) => Promise.resolve(mockGetVideoDetail(url))),
-          };
-        });
       });
 
       it('Get host id from the watch together area', async () => {

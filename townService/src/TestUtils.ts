@@ -198,6 +198,7 @@ export function expectArraysToContainSameMembers<T>(actual: T[], expected: T[]):
   );
 }
 
+// mocking the behavior of the youtube api fetching process
 export function mockGetVideoDetail(url: string): WatchTogetherVideo {
   const video: WatchTogetherVideo = {
     title: '',

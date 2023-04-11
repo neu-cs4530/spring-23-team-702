@@ -10,10 +10,11 @@ import {
   Input,
   Button,
   FormErrorMessage,
+  Box,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { Video } from '../../../../types/CoveyTownSocket';
-import Playlist from './PlayistVisualization';
+import Playlist from './PlaylistVisualization';
 
 export default function PlaylistDrawer({
   drawerIsOpen,
@@ -75,20 +76,21 @@ export default function PlaylistDrawer({
             />
             <FormErrorMessage>Please input a valid Youtube video URL</FormErrorMessage>
           </FormControl>
-
           {/* Next video play button */}
-          <Button
-            colorScheme='teal'
-            onClick={() => {
-              // const newPlaylist = [...playList];
-              // newPlaylist.shift();
-              // handlePlaylistUpdate(newPlaylist);
-              // console.log(newPlaylist);
-              handleNextVideo();
-            }}
-            inlineSize={'full'}>
-            Next video
-          </Button>
+          <Box paddingTop={'2'}>
+            <Button
+              colorScheme='teal'
+              onClick={() => {
+                // const newPlaylist = [...playList];
+                // newPlaylist.shift();
+                // handlePlaylistUpdate(newPlaylist);
+                // console.log(newPlaylist);
+                handleNextVideo();
+              }}
+              inlineSize={'full'}>
+              Next video
+            </Button>
+          </Box>
           {/* Video preview list */}
           <Playlist playlist={playList}></Playlist>
         </DrawerBody>

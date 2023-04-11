@@ -25,6 +25,7 @@ import {
 import WatchTogetherAreaInteractable from '../WatchTogetherArea';
 import { WatchTogetherArea, Video } from '../../../../types/CoveyTownSocket';
 import { useVideo, useHost, usePlayList } from '../../../../classes/WatchTogetherAreaController';
+import YoutubeLoginModal from './YoutubeLoginModal';
 
 export function WatchTogetherVideo({
   watchTogetherArea,
@@ -34,6 +35,8 @@ export function WatchTogetherVideo({
   const coveyTownController = useTownController();
   const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
+  const [loginModalIsOpen, setLoginModalIsOpen] = useState<boolean>(false);
+
   // we can directly passing the Video object here rather than seperating them
   const video = useVideo(watchTogetherAreaController);
   // the front end knows host from here
@@ -44,7 +47,6 @@ export function WatchTogetherVideo({
 
   const handlePlaylistUpdate = (videoURL: string) => {
     coveyTownController.fetchVideoInfo(watchTogetherAreaController, videoURL);
-    coveyTownController.emitWatchTogetherAreaUpdate(watchTogetherAreaController);
   };
 
   const handleNextVideo = () => {
@@ -144,6 +146,25 @@ export function WatchTogetherVideo({
                 inlineSize={'full'}>
                 Open Playlist
               </Button>
+              <Box paddingTop={'2'}>
+                <Button
+                  colorScheme='red'
+                  onClick={() => {
+                    setLoginModalIsOpen(true);
+                  }}
+                  inlineSize={'full'}>
+                  Youtube Login
+                </Button>
+              </Box>
+
+              <YoutubeLoginModal
+                isOpen={loginModalIsOpen}
+                onClose={function (): void {
+                  setLoginModalIsOpen(false);
+                }}
+                handlePlaylistUpdate={handlePlaylistUpdate}
+              />
+
               {/* Video chat box list for discussion */}
               <Box paddingTop={'6'} overflowY='auto'>
                 <ParticipantList />

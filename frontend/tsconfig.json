@@ -27,7 +27,7 @@
   },
   "include": [
     "src",
-    "generated"
+    "generated",
   ],
   "references": [{"path": "../shared/"}]
 }

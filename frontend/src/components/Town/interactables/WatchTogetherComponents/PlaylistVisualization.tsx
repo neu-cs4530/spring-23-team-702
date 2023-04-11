@@ -3,7 +3,6 @@ import React from 'react';
 import { Video } from '../../../../types/CoveyTownSocket';
 
 export default function Playlist({ playlist }: { playlist: Video[] }): JSX.Element {
-  console.log(playlist);
   return (
     <>
       <List spacing={3}>

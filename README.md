@@ -31,6 +31,7 @@ To create an account and configure your local environment:
 | `TWILIO_API_KEY_SID`    | The SID of the new API key you created.   |
 | `TWILIO_API_KEY_SECRET` | The secret for the API key you created.   |
 | `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard. |
+| `YOUTUBE_API_KEY`       | The youtube API key from google cloud     |
 
 ### Starting the backend
 
@@ -39,7 +40,17 @@ The backend will automatically restart if you change any of the files in the `to
 
 ### Configuring the frontend
 
-Create a `.env` file in the `frontend` directory, with the line: `REACT_APP_TOWNS_SERVICE_URL=http://localhost:8081` (if you deploy the towns service to another location, put that location here instead)
+Create a `.env` file in the `frontend` directory, with the line:
+
+```
+REACT_APP_TOWNS_SERVICE_URL=http://localhost:8081
+
+REACT_APP_GOOGLE_OAUTH_CLIENT_ID=xxx.apps.googleusercontent.com (replace this with your google OAUTH client ID request via google cloud console, also make sure the redirect URL and Javascript client is set to your frontend URL)
+
+REACT_APP_YOUTUBE_API_KEY=xxx (replace this, it needs to be inside the same google cloud project as REACT_APP_GOOGLE_OAUTH_CLIENT_ID)
+```
+
+(if you deploy the towns service to another location, put that location here instead)
 
 ### Running the frontend
 

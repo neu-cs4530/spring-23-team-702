@@ -1,19 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Button,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   List,
   ListItem,
   Image,
-  Flex,
-  Center,
-  Box,
   Text,
   Grid,
   GridItem,
@@ -24,10 +19,8 @@ import axios from 'axios';
 import { loadGapiInsideDOM, loadAuth2 } from 'gapi-script';
 import * as env from 'env-var';
 
-console.log(process.env);
-const GOOGLE_OAUTH_CLIENT_ID =
-  '810380469783-q7lp7q66vk5t16pc03rac486r01bcgh3.apps.googleusercontent.com'; //env.get('YOUTUBE_API_KEY').required().asString();
-const YOUTUBE_API_KEY = 'AIzaSyB6Sf74ZTtBYjh6OracF8STGrg77eWbmb'; //env.get('GOOGLE_OAUTH_CLIENT_ID').required().asString();
+const GOOGLE_OAUTH_CLIENT_ID = env.get('REACT_APP_GOOGLE_OAUTH_CLIENT_ID').required().asString();
+const YOUTUBE_API_KEY = env.get('REACT_APP_YOUTUBE_API_KEY').required().asString();
 
 export async function addPlaylistToQueue(
   access_token: string,
@@ -84,7 +77,6 @@ export function Playlist({
                 <Button
                   colorScheme='teal'
                   onClick={() => {
-                    console.log('clicked' + video.id);
                     addPlaylistToQueue(access_token, video.id, handlePlaylistUpdate);
                   }}
                   inlineSize={'full'}>
@@ -114,8 +106,6 @@ export async function fetchPlaylist(
     .then(r => r.data);
 
   if (!response.items) return Promise.reject(new Error('Nothing was found.'));
-
-  console.log(response);
 
   const returnArray: Array<{ title: string; id: string; thumbnail: string }> = [];
 
@@ -150,7 +140,6 @@ export default function YoutubeLoginModal({
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const login = useCallback(async () => {
-    console.log(';asd');
     const gapi = await loadGapiInsideDOM();
     const auth2 = await loadAuth2(
       gapi,

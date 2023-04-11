@@ -21,7 +21,6 @@ import { TownsServiceClient } from './generated/client';
 
 function App() {
   const [townController, setTownController] = useState<TownController | null>(null);
-
   const { error, setError } = useAppState();
   const connectionOptions = useConnectionOptions();
   const onDisconnect = useCallback(() => {
@@ -43,11 +42,6 @@ function App() {
   }
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
-  console.log(process.env);
-  // const oauthClientID = process.env.GOOGLE_OAUTH_CLIENT_ID;
-  // assert(oauthClientID);
-  // const ytApiKey = process.env.YOUTUBE_API_KEY;
-  // assert(ytApiKey);
   const townsService = new TownsServiceClient({ BASE: url }).towns;
   return (
     <LoginControllerContext.Provider value={{ setTownController, townsService }}>

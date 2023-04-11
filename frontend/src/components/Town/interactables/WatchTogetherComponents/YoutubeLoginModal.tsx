@@ -22,6 +22,13 @@ import * as env from 'env-var';
 const GOOGLE_OAUTH_CLIENT_ID = env.get('REACT_APP_GOOGLE_OAUTH_CLIENT_ID').required().asString();
 const YOUTUBE_API_KEY = env.get('REACT_APP_YOUTUBE_API_KEY').required().asString();
 
+/**
+ * Fetch video information from the given playlist and add to the queue
+ *
+ * @param access_token the access token of the currently signed in user
+ * @param listID id of the playlist that needs to be added
+ * @param handlePlaylistUpdate function to add each individual youtube video to playlist
+ */
 export async function addPlaylistToQueue(
   access_token: string,
   listID: string,
@@ -52,6 +59,13 @@ export async function addPlaylistToQueue(
   return response;
 }
 
+/**
+ * Renders the given playlists such that each playlist is rendered with thumbnail, title and a add to queu button
+ *
+ * @param props: A 'playlist' array containing all needed info to render the playlist
+ *             : A 'access_token', the access token of the currently signed in user
+ *             : A 'handlePlaylistUpdate function, to add each individual youtube video to playlist
+ */
 export function Playlist({
   playlist,
   access_token,

@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Button } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import TownController from '../../../../classes/TownController';
-import useTownController from '../../../../hooks/useTownController';
 import { Video } from '../../../../types/CoveyTownSocket';
 import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaController';
 
@@ -89,10 +87,9 @@ export default function WatchTogetherModal({
           }
         }}
         onPause={() => {
-          console.log('Pause event triggered');
           setIsPlaying(false);
+          // check if current user is the host, otherwise force resume the video and sync the elapsedTimeSec
           if (watchTogetherAreaController.playList[0].pause && isHost) {
-            // if(ViewingAreaController.host ==  coveyTownController.ourPlayer.id)
             const currentVideo: Video = watchTogetherAreaController.playList[0];
             currentVideo.pause = false;
             coveyTownController.updateWatchTogetherVideo(watchTogetherAreaController, currentVideo);
@@ -100,9 +97,10 @@ export default function WatchTogetherModal({
             console.log('Current user is not the host, cannot control the video');
             setIsPlaying(watchTogetherAreaController.playList[0].pause);
             reactPlayer?.seekTo(watchTogetherAreaController.playList[0].elapsedTimeSec);
-            // TODO: replace it with the controller's video playedSeconds.
           }
 
+          // ReactPlayer treats a client side seekTo as a pause event, we also need to
+          // check if the current player is the host, otherwise force seekTo the elapsedTimeSec with host
           if (
             reactPlayer != undefined &&
             reactPlayer.getCurrentTime() != 0 &&

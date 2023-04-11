@@ -16,6 +16,19 @@ import React, { useState } from 'react';
 import { Video } from '../../../../types/CoveyTownSocket';
 import Playlist from './PlaylistVisualization';
 
+/**
+ * The PlaylistDrawer does the following:
+ * -- Provide a text input box to accept Youtube video URL
+ * -- Provide a next video button to skip the current playing video
+ * -- Renders all video inside the playlist with thumbnails and title
+ *
+ * @param props : A 'drawerIsOpen' boolean, which determines whether the drawer is open or not
+ *              : A 'close' function, to be called when the modal is closed
+ *              : A 'playList' array of video, which contains all the video synced with backend
+ *              : A 'handlePlaylistUpdate' function, that takes in a videoURL as string
+ *                tells the backend to add video to the playlist
+ *              : A 'handleNextVideo' function, which is called for skipping current playing video
+ */
 export default function PlaylistDrawer({
   drawerIsOpen,
   close,
@@ -81,10 +94,6 @@ export default function PlaylistDrawer({
             <Button
               colorScheme='teal'
               onClick={() => {
-                // const newPlaylist = [...playList];
-                // newPlaylist.shift();
-                // handlePlaylistUpdate(newPlaylist);
-                // console.log(newPlaylist);
                 handleNextVideo();
               }}
               inlineSize={'full'}>

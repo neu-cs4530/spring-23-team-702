@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Button,
@@ -12,8 +11,7 @@ import {
   Center,
   useToast,
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import ReactPlayer from 'react-player';
+import React, { useCallback, useEffect, useState } from 'react';
 import useTownController from '../../../../hooks/useTownController';
 import ParticipantList from '../../../VideoCall/VideoFrontend/components/ParticipantList/ParticipantList';
 import WatchTogetherYoutubePlayer from './YoutubePlayer';
@@ -23,8 +21,8 @@ import {
   useWatchTogetherAreaController,
 } from '../../../../classes/TownController';
 import WatchTogetherAreaInteractable from '../WatchTogetherArea';
-import { WatchTogetherArea, Video } from '../../../../types/CoveyTownSocket';
-import { useVideo, useHost, usePlayList } from '../../../../classes/WatchTogetherAreaController';
+import { WatchTogetherArea } from '../../../../types/CoveyTownSocket';
+import { useHost, usePlayList } from '../../../../classes/WatchTogetherAreaController';
 import YoutubeLoginModal from './YoutubeLoginModal';
 
 export function WatchTogetherVideo({
@@ -36,12 +34,7 @@ export function WatchTogetherVideo({
   const watchTogetherAreaController = useWatchTogetherAreaController(watchTogetherArea.name);
   const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
   const [loginModalIsOpen, setLoginModalIsOpen] = useState<boolean>(false);
-
-  // we can directly passing the Video object here rather than seperating them
-  const video = useVideo(watchTogetherAreaController);
-  // the front end knows host from here
   const hostID = useHost(watchTogetherAreaController);
-  // whether the current video is playing or not
   const playList = usePlayList(watchTogetherAreaController);
   const [isHost, setIsHost] = useState<boolean>(hostID === coveyTownController.ourPlayer.id);
 
@@ -52,8 +45,6 @@ export function WatchTogetherVideo({
   const handleNextVideo = () => {
     coveyTownController.watchTogetherPlayNext(watchTogetherAreaController);
   };
-
-  // const reactPlayerRef = useRef<ReactPlayer>(null);
 
   const toast = useToast();
 
@@ -71,6 +62,8 @@ export function WatchTogetherVideo({
     }
   }, [coveyTownController.ourPlayer.id, hostID]);
 
+  // When being called, send a request to backend to create a WatchTogetherArea
+  // with current player's id as host
   const createWatchTogetherArea = useCallback(async () => {
     const request: WatchTogetherArea = {
       id: watchTogetherAreaController.id,
@@ -96,7 +89,7 @@ export function WatchTogetherVideo({
         });
       }
     }
-  }, [coveyTownController, toast, watchTogetherAreaController.id]); // why there is dependencies here, might want to delete them
+  }, [coveyTownController, toast, watchTogetherAreaController.id]);
 
   if (hostID === undefined && watchTogetherAreaController) {
     createWatchTogetherArea();
@@ -121,12 +114,10 @@ export function WatchTogetherVideo({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {/* TODO: will be updated with 'TV playing ${video title}' */}
-          <Center>Basement TV playing</Center>
+          <Center>TV playing</Center>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {/* TODO: probably having a dark mode would be great? (stretch goal) */}
           <Flex color='white'>
             {/* Flex div divided into two box with 1:4 ratio */}
             <Box
@@ -194,8 +185,9 @@ export function WatchTogetherVideo({
     </Modal>
   );
 }
+
 /**
- * The ViewingAreaWrapper is suitable to be *always* rendered inside of a town, and
+ * The WatcherTogetherAreaWrapper is suitable to be *always* rendered inside of a town, and
  * will activate only if the player begins interacting with a viewing area.
  */
 export default function WatcherTogetherAreaWrapper(): JSX.Element {

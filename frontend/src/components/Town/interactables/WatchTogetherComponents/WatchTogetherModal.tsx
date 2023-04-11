@@ -25,6 +25,16 @@ import { WatchTogetherArea } from '../../../../types/CoveyTownSocket';
 import { useHost, usePlayList } from '../../../../classes/WatchTogetherAreaController';
 import YoutubeLoginModal from './YoutubeLoginModal';
 
+/**
+ * The WatchTogetherVideo does the following:
+ * -- Renders the current playing video with controls in ReactPlayer
+ * -- Renders a list of video chat using the WatchTogetherArea
+ * -- Provides a open playlist drawer for platlist management
+ * -- Provides a login to youtube button for logging into youtube
+ *
+ * @param props: A 'watchTogetherArea', the watchTogetherArea interactable corresponding
+ *               current area
+ */
 export function WatchTogetherVideo({
   watchTogetherArea,
 }: {
@@ -38,16 +48,19 @@ export function WatchTogetherVideo({
   const playList = usePlayList(watchTogetherAreaController);
   const [isHost, setIsHost] = useState<boolean>(hostID === coveyTownController.ourPlayer.id);
 
+  // Add the given validated video url to controller
   const handlePlaylistUpdate = (videoURL: string) => {
     coveyTownController.fetchVideoInfo(watchTogetherAreaController, videoURL);
   };
 
+  // Remove the first video inside the platlist
   const handleNextVideo = () => {
     coveyTownController.watchTogetherPlayNext(watchTogetherAreaController);
   };
 
   const toast = useToast();
 
+  // Modal should only open once the creation of watchTogetherArea is completed
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(
     !(hostID === undefined && watchTogetherAreaController != undefined),
   );
@@ -91,6 +104,7 @@ export function WatchTogetherVideo({
     }
   }, [coveyTownController, toast, watchTogetherAreaController.id]);
 
+  // If no hostID present, create the watchTogetherArea
   if (hostID === undefined && watchTogetherAreaController) {
     createWatchTogetherArea();
   }

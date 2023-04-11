@@ -7,7 +7,16 @@ import WatchTogetherAreaController from '../../../../classes/WatchTogetherAreaCo
 
 const ALLOWED_DRIFT = 3;
 
-export default function WatchTogetherModal({
+/**
+ * YoutubePlayer renders the current playing video with ReactPlayer
+ *
+ * @param props: A 'watchTogetherAreaController', the watchTogetherAreaController corresponding current area
+ *               A 'coveyTownController', the town controller where the corresponding area reside in
+ *               A 'videoPlaylist' array of video, the array of video containing the video needs to be played as the first element
+ *               A 'isHost' boolean, denoting if the current user is the host (whether it has the permission to control the video)
+ *               A 'handleNextVideo' function, when called, skips the current playing video
+ */
+export default function YoutubePlayer({
   watchTogetherAreaController,
   coveyTownController,
   videoPlaylist,
@@ -33,7 +42,6 @@ export default function WatchTogetherModal({
   }, [setCurrentPlayingVideo, videoPlaylist]);
 
   useEffect(() => {
-    console.log('controller changed');
     if (watchTogetherAreaController.playList[0] != undefined && reactPlayer != undefined) {
       setIsPlaying(watchTogetherAreaController.playList[0].pause);
       const currentTime = reactPlayer.getCurrentTime();

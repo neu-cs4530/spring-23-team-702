@@ -885,6 +885,47 @@ describe('Town', () => {
       });
     });
   });
+  describe('[T1] addWatchTogetherArea', () => {
+    const videoURL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    const videoURL2 = 'https://www.youtube.com/watch?v=MMq6eq8meV4&t=1240s';
+    let newModel: WatchTogetherAreaModel;
+    beforeEach(async () => {
+      town.initializeFromMap(testingMaps.twoWatchTogether);
+      newModel = {
+        id: 'Name2',
+        video: undefined,
+        playList: [],
+      };
+      playerTestData.moveTo(160, 570); // Inside of "Name2" area'
+      newModel.hostID = player.id;
+      expect(town.addWatchTogetherArea(newModel)).toBe(true);
+    });
+    it('Should able to fetch video from youtube api', async () => {
+      const video = await town.addVideoToWatchTogetherPlaylist(videoURL, newModel, player.id);
+      const video2 = await town.addVideoToWatchTogetherPlaylist(videoURL2, newModel, player.id);
+      expect(video.title).toEqual('Rick Astley - Never Gonna Give You Up (Official Music Video)');
+      expect(video.elapsedTimeSec).toEqual(0); // video begins at 0 seconds
+      expect(video.pause).toEqual(true); // video default is playing
+      expect(video2.title).toBe('Yuki Murata - Piano Solo Concert (Full Concert) #Anoice');
+    });
+    it('Should able to play next video when video exists', async () => {
+      await town.addVideoToWatchTogetherPlaylist(videoURL, newModel, player.id);
+      expect(town.watchTogetherPlayNext(newModel)).toEqual(true);
+    });
+    it('Should not play next video when no video exists', async () => {
+      expect(town.watchTogetherPlayNext(newModel)).toEqual(false);
+    });
+    it('Should update video given a video info', async () => {
+      const video = await town.addVideoToWatchTogetherPlaylist(videoURL, newModel, player.id);
+      video.elapsedTimeSec = 1000;
+      const result = await town.watchTogetherUpdateVideo(newModel, video);
+      expect(result).toBe(true);
+      expect(newModel.playList[0].elapsedTimeSec).toEqual(1000);
+    });
+    it('Should able to get host id', async () => {
+      expect(town.watchTogetherHostID(newModel)).toEqual(player.id);
+    });
+  });
   describe('disconnectAllPlayers', () => {
     beforeEach(() => {
       town.disconnectAllPlayers();

@@ -5,7 +5,6 @@ import TownsStore from '../lib/TownsStore';
 import * as TestUtils from '../TestUtils';
 import { TownsController } from './TownsController';
 
-
 type TestTownData = {
   friendlyName: string;
   townID: string;

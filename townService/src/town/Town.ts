@@ -392,6 +392,14 @@ export default class Town {
     return true;
   }
 
+  /**
+   * Given the url of a Youtube Video, fetch the video info using Youtube API and concat it to the
+   * end of this area's playlist.
+   * @param url The video url
+   * @param watchTogetherArea Area that this video is requested
+   * @param playerID Player that entered this url
+   * @returns The video information
+   */
   public async addVideoToWatchTogetherPlaylist(
     url: string,
     watchTogetherArea: WatchTogetherAreaModel,
@@ -423,6 +431,12 @@ export default class Town {
     return newVideo;
   }
 
+  /**
+   * Update the watch together current playing video to be the next one in the playlist
+   * Pop the top of the playlist, and assign the video to be the newest top video.
+   * @param watchTogetherArea The area to perform play next
+   * @returns If playlist can perform play next
+   */
   public watchTogetherPlayNext(watchTogetherArea: WatchTogetherAreaModel): boolean {
     const area = this._interactables.find(
       eachArea => eachArea.id === watchTogetherArea.id,
@@ -443,6 +457,13 @@ export default class Town {
     return true;
   }
 
+  /**
+   * Update the information of current playing video in this area
+   * Used to async the time and pause status of the video.
+   * @param watchTogetherArea The area to perform video update
+   * @param video The new status of the video
+   * @returns Whether the perform succedded.
+   */
   public watchTogetherUpdateVideo(
     watchTogetherArea: WatchTogetherAreaModel,
     video: Video,
@@ -466,6 +487,12 @@ export default class Town {
     return true;
   }
 
+  /**
+   * Get the host ID from this area. Not used currently. But is saved if in future
+   * we want to complete the extension of current host.
+   * @param watchTogetherArea The area to get host ID
+   * @returns The host ID
+   */
   public watchTogetherHostID(watchTogetherArea: WatchTogetherAreaModel): string | undefined {
     const area = this._interactables.find(
       eachArea => eachArea.id === watchTogetherArea.id,

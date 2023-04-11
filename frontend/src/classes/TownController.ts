@@ -827,10 +827,10 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   }
 
   /**
-   * Update the current video status, synchronizing the time and pause. 
+   * Update the current video status, synchronizing the time and pause.
    * @param watchTogetherArea the watch together area controller
    * @param video the video that's modified
-   * @returns a promise wrapping the modified video 
+   * @returns a promise wrapping the modified video
    */
   public async updateWatchTogetherVideo(
     watchTogetherArea: WatchTogetherAreaController,
